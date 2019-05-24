@@ -3,6 +3,8 @@
 
 #include <vector>
 #include <list>
+#include <stack>
+#include <queue>
 
 #include "node.h"
 #include "edge.h"
@@ -40,7 +42,10 @@ public:
         // TODO Destructor
     }
 
-    void killself();
+    void killself()
+    {
+        // TODO
+    }
 
     int size()
     {
@@ -48,7 +53,7 @@ public:
     }
 
 
-    bool insertNode(N name)
+    bool insertNode(N name, double xAxis = 0, double yAxis = 0)
     {
         auto tempNode = this->getNode(name);
         if(tempNode != NULL)
@@ -58,12 +63,11 @@ public:
         }
         else
         {
-            auto newNode = new node(name);
+            auto newNode = new node(name, xAxis, yAxis);
             nodes.push_back(newNode);
             return true;
         }
     }
-
 
     bool insertEdge(N orig, N dest, E height, bool direction=0)
     {
@@ -88,28 +92,82 @@ public:
 
     bool removeNode(N name)
     {
-        auto tempNode = getNode(name);
-        if(tempNode  == NULL )
-            return false;
-        nodes.erase();
-        return true;
-    }
-    bool removeEdge(N orig, N dest)
-    {
-        auto tempEdge = getEdge(orig, dest);
-        return true;
+        bool flag = false;
+        NodeIte tempIte;
+
+        if(size()<=0) return false;
+        else
+        {
+            for (ni = nodes.begin(); ni != nodes.end() ; ni++)
+            {
+                for (ei = (*ni)->edges.begin() ;  ei != (*ni)->edges.end(); ei++)
+                {
+                    if((*ei)->nodes[1]->getData() == name)
+                    {
+                        (*ni)->edges.erase(ei);
+                        break;
+                    }
+                }
+                if((*ni)->getData() == name)
+                {
+                    flag = true;
+                    tempIte = ni;
+                }
+            }
+            if(!flag)
+                return false;
+            nodes.erase(tempIte);
+            return true;
+        }
     }
 
-    bool findEdge();
-    bool findNode();
+    bool removeEdge(N orig, N dest)
+    {
+        bool flag = false;
+
+        if(size()>0)
+        {
+            for (ni = nodes.begin(); ni != nodes.end(); ni++)
+            {
+                for (ei = (*ni)->edges.begin() ;  ei != (*ni)->edges.end(); ei++)
+                {
+                    if((*ei)->nodes[0]->getData() == orig && (*ei)->nodes[1]->getData() == dest)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if(flag == true) break;
+            }
+            if(!flag)
+                return false;
+            (*ni)->edges.erase(ei);
+            return true;
+        }
+        return false;
+    }
+
+    bool findEdge(N orig, N dest)
+    {
+        if(getEdge(orig, dest) == NULL) return false;
+        else return true;
+    }
+
+    bool findNode(N name)
+    {
+        if(getNode(name) == NULL) return false;
+        else return true;
+    }
 
     bool density()
     {
         float dens = 0.0f;
-        dens = 1/nodes.size()/(nodes.size()-1) ;
+
+        dens = (float)getNumberEdges()/(float)nodes.size()/(float)(nodes.size()-1) ;
 
         return dens >= 0.6f;
     }
+
     bool grade(node a);
     bool connected();
     bool strongConnected();
@@ -118,8 +176,115 @@ public:
     void MST_Prim();
     void MST_Kruskal();
 
-    void searchBFS();
-    void searchDFS();
+    void BFS(N orig)
+    {
+        bool nodeVisited, destNodeVisited;
+
+        queue<node *> container;
+        list<node *> visited;
+
+        auto currentNode = getNode(orig);
+
+        if(currentNode == NULL)
+            return;
+        else
+        {
+            container.push(currentNode);
+            while(container.size()>0)
+            {
+                nodeVisited = false;
+                currentNode = container.front();
+                container.pop();
+                for (auto it = visited.begin(); it != visited.end() ; it++)
+                {
+                    if(*it == currentNode)
+                    {
+                        nodeVisited = true;
+                        break;
+                    }
+                }
+                if(!nodeVisited)
+                {
+                    cout << currentNode->getData() << ", ";
+
+                    visited.push_back(currentNode);
+
+                    for (ei = currentNode->edges.begin() ;  ei != currentNode->edges.end(); ei++)
+                    {
+                        destNodeVisited = 0;
+                        for(auto it = visited.begin(); it != visited.end(); it++)
+                        {
+                            if((*ei)->nodes[1] == *it)
+                            {
+                                destNodeVisited = true;
+                                break;
+                            }
+                        }
+                        if(!destNodeVisited)
+                        {
+                            container.push((*ei)->nodes[1]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    void DFS(N orig)
+    {
+
+        bool nodeVisited, destNodeVisited;
+
+        stack<node *> container;
+        list<node *> visited;
+
+        auto currentNode = getNode(orig);
+
+        if(currentNode == NULL)
+            return;
+        else
+        {
+            container.push(currentNode);
+            while(container.size()>0)
+            {
+                nodeVisited = false;
+                currentNode = container.top();
+                container.pop();
+                for (auto it = visited.begin(); it != visited.end() ; it++)
+                {
+                    if(*it == currentNode)
+                    {
+                        nodeVisited = true;
+                        break;
+                    }
+                }
+                if(!nodeVisited)
+                {
+                    cout << currentNode->getData() << ", ";
+
+                    visited.push_back(currentNode);
+
+                    for (ei = currentNode->edges.begin() ;  ei != currentNode->edges.end(); ei++)
+                    {
+                        destNodeVisited = 0;
+                        for(auto it = visited.begin(); it != visited.end(); it++)
+                        {
+                            if((*ei)->nodes[1] == *it)
+                            {
+                                destNodeVisited = true;
+                                break;
+                            }
+                        }
+                        if(!destNodeVisited)
+                        {
+                            container.push((*ei)->nodes[1]);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     void print()
     {
@@ -140,7 +305,6 @@ private:
     NodeIte ni;
     EdgeIte ei;
 
-
     node *getNode(N name)
     {
         if(size()>0)
@@ -155,7 +319,6 @@ private:
         }
         return NULL;
     }
-
 
     edge *getEdge(N orig, N dest)
     {
@@ -173,6 +336,19 @@ private:
         return NULL;
     }
 
+    int getNumberEdges()
+    {
+        int count = 0;
+        if(size()>0)
+        {
+            for (ni = nodes.begin(); ni != nodes.end() ; ni++)
+            {
+                count = count + (*ni)->edges.size();
+            }
+            return count;
+        }
+        return 0;
+    }
 };
 
 typedef Graph<Traits> graph;

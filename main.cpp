@@ -18,18 +18,43 @@ int main(int argc, char *argv[]) {
     graph1.insertNode('B');
     graph1.insertNode('C');
     graph1.insertNode('D');
+    graph1.insertNode('E');
+    graph1.insertNode('F');
+    graph1.insertNode('G');
 
-    graph1.insertEdge('A', 'C', 15);
-    graph1.insertEdge('B', 'C', 7);
-    graph1.insertEdge('A', 'B', 2);
-    graph1.insertEdge('C', 'A', 3);
-
-    graph1.insertEdge('A', 'B', 10);
+    graph1.insertEdge('A', 'A', 13);
+    graph1.insertEdge('A', 'D', 8);
+    graph1.insertEdge('B', 'B', 52);
+    graph1.insertEdge('B', 'C', 17);
+    graph1.insertEdge('B', 'D', 83);
+    graph1.insertEdge('B', 'F', 97);
+    graph1.insertEdge('B', 'G', 60);
+    graph1.insertEdge('C', 'A', 4);
+    graph1.insertEdge('D', 'B', 97);
+    graph1.insertEdge('D', 'C', 37);
+    graph1.insertEdge('D', 'D', 22);
+    graph1.insertEdge('D', 'E', 41);
+    graph1.insertEdge('D', 'G', 64);
+    graph1.insertEdge('E', 'B', 8);
+    graph1.insertEdge('E', 'E', 45);
+    graph1.insertEdge('E', 'F', 92);
+    graph1.insertEdge('F', 'A', 12);
+    graph1.insertEdge('F', 'B', 8);
+    graph1.insertEdge('F', 'E', 42);
+    graph1.insertEdge('G', 'D', 17);
 
 
     cout << "\nSize: " << graph1.size() << endl << endl;
+    cout << "\nDensity: " << graph1.density() << endl << endl;
 
     graph1.print();
+
+    cout << "\n\nBFS: \n" ;
+    graph1.BFS('B');
+
+
+    cout << "\n\nDFS: \n" ;
+    graph1.DFS('B');
 
     return EXIT_SUCCESS;
 }

@@ -14,6 +14,7 @@ public:
     Node(){}
     Node(N value){data = value;}
     Node(double xAxis, double yAxis){x = xAxis; y = yAxis;}
+    Node(N value, double xAxis, double yAxis){data = value; x= xAxis; y = yAxis;}
 
     N getData() {return data;}
     void setData(N newData) {data = newData;}
