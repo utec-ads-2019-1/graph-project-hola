@@ -50,11 +50,12 @@ int main(int argc, char *argv[]) {
     graph1.print();
 
     cout << "\n\nBFS: \n" ;
-    graph1.BFS('B');
-
+    auto bfs1 = graph1.BFS('B');
+    bfs1->print();
 
     cout << "\n\nDFS: \n" ;
-    graph1.DFS('B');
+    auto dfs1 = graph1.DFS('B');
+    dfs1->print();
 
     return EXIT_SUCCESS;
 }

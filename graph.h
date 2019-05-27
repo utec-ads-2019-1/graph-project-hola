@@ -69,7 +69,7 @@ public:
         }
     }
 
-    bool insertEdge(N orig, N dest, E height, bool direction=0)
+    bool insertEdge(N orig, N dest, E height=1, bool direction=0)
     {
         auto firstNode = getNode(orig);
         auto secondNode = getNode(dest);
@@ -176,23 +176,30 @@ public:
     void MST_Prim();
     void MST_Kruskal();
 
-    void BFS(N orig)
+    Graph* BFS(N orig)
     {
+        auto newGraph = new Graph;
+
+        for (ni = this->nodes.begin(); ni != this->nodes.end(); ni++)
+            newGraph->insertNode((*ni)->getData(), (*ni)->getX(), (*ni)->getY());
+
         bool nodeVisited, destNodeVisited;
 
         queue<node *> container;
         list<node *> visited;
 
         auto currentNode = getNode(orig);
+        auto prevNode = currentNode;
 
         if(currentNode == NULL)
-            return;
+            return NULL;
         else
         {
             container.push(currentNode);
             while(container.size()>0)
             {
                 nodeVisited = false;
+                prevNode = currentNode;
                 currentNode = container.front();
                 container.pop();
                 for (auto it = visited.begin(); it != visited.end() ; it++)
@@ -205,7 +212,10 @@ public:
                 }
                 if(!nodeVisited)
                 {
-                    cout << currentNode->getData() << ", ";
+                    //cout << currentNode->getData() << ", ";
+
+                    if(prevNode != currentNode)
+                        newGraph->insertEdge(prevNode->getData(), currentNode->getData());
 
                     visited.push_back(currentNode);
 
@@ -227,12 +237,17 @@ public:
                     }
                 }
             }
+            return newGraph;
         }
     }
 
 
-    void DFS(N orig)
+    Graph* DFS(N orig)
     {
+        auto newGraph = new Graph;
+
+        for (ni = this->nodes.begin(); ni != this->nodes.end(); ni++)
+            newGraph->insertNode((*ni)->getData(), (*ni)->getX(), (*ni)->getY());
 
         bool nodeVisited, destNodeVisited;
 
@@ -240,15 +255,17 @@ public:
         list<node *> visited;
 
         auto currentNode = getNode(orig);
+        auto prevNode = currentNode;
 
         if(currentNode == NULL)
-            return;
+            return NULL;
         else
         {
             container.push(currentNode);
             while(container.size()>0)
             {
                 nodeVisited = false;
+                prevNode = currentNode;
                 currentNode = container.top();
                 container.pop();
                 for (auto it = visited.begin(); it != visited.end() ; it++)
@@ -261,7 +278,11 @@ public:
                 }
                 if(!nodeVisited)
                 {
-                    cout << currentNode->getData() << ", ";
+                    //cout << currentNode->getData() << ", ";
+
+                    if(prevNode != currentNode)
+                        newGraph->insertEdge(prevNode->getData(), currentNode->getData());
+
 
                     visited.push_back(currentNode);
 
@@ -283,6 +304,7 @@ public:
                     }
                 }
             }
+            return newGraph;
         }
     }
 

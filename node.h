@@ -12,12 +12,17 @@ public:
     EdgeSeq edges;
 
     Node(){}
-    Node(N value){data = value;}
-    Node(double xAxis, double yAxis){x = xAxis; y = yAxis;}
+    Node(N value){data = value; x = y = 0;}
     Node(N value, double xAxis, double yAxis){data = value; x= xAxis; y = yAxis;}
 
     N getData() {return data;}
     void setData(N newData) {data = newData;}
+
+    double getX(){return x;}
+    void setX(double X){x = X;}
+
+    double getY(){return y;}
+    void setY(double Y){y = Y;}
 
 private:
     N data;
