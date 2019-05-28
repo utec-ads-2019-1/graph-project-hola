@@ -53,9 +53,27 @@ public:
     }
 
 
+    void sort (vector<node*> &Nodes, int left, int right) {
+      if (left >= right) return;
+      int pivot = Nodes[left + (right - left)/2]->edges->getData();
+      int lindex = left - 1;
+      int rindex = right + 1;
+
+      while(1) {
+        while(Nodes[++rindex]->edges->getData() < pivot);
+        while(Nodes[--rindex]->edges->getData() > pivot);
+        if(lindex >= rindex) break;
+        swap (Nodes[lindex], Nodes[rindex]);
+      }
+
+      sort(Nodes, left, rindex);
+      sort(Nodes, rindex + 1, right);
+    }
+
+
     bool insertNode(N name, double xAxis = 0, double yAxis = 0)
     {
-        auto tempNode = this->getNode(name);
+      auto tempNode = this->getNode(name);
         if(tempNode != NULL)
         {
             if(tempNode->getData() == name)
@@ -173,7 +191,33 @@ public:
     bool strongConnected();
     bool bipartite();
 
-    void MST_Prim();
+
+    Graph* MST_Prim(N orig) 
+    {
+      auto newGraph = new Graph;
+
+      for (ni = this->nodes.begin(); ni != this->nodes.end(); ni++)
+            newGraph->insertNode((*ni)->getData(), (*ni)->getX(), (*ni)->getY());
+
+      int controller = 0;
+      auto currentNode = getNode(orig);
+
+      if (currentNode == NULL)
+        return NULL;
+
+      else
+      {
+        while (controller != size()) {
+          
+          }
+
+        return newGraph;
+
+      }
+
+   }
+
+
     void MST_Kruskal();
 
     Graph* BFS(N orig)
@@ -326,6 +370,7 @@ private:
     NodeSeq nodes;
     NodeIte ni;
     EdgeIte ei;
+    EdgeIte aei;
 
     node *getNode(N name)
     {
@@ -358,6 +403,24 @@ private:
         return NULL;
     }
 
+    node *minEdge(N name)
+    {
+      if(size()>0)
+      {
+        for (ni = nodes.begin(); ni != nodes.end(); ni++)
+        {
+          if ((*ni)->getData() == name) {
+            for (ei = (*ni)->edges.begin(); ei != (*ni)->edges.end() - 1; ei++){
+              for (aei = (*ni)->edges.begin(); aei != (*ni)->edges.end() - ei - 1; aei ++) {
+                if ((*aei)->getData() > (*ei)->getData() )
+                  swap(*aei, *ei);
+              }
+            }
+          }       
+        }
+      }
+    }
+
     int getNumberEdges()
     {
         int count = 0;
@@ -371,6 +434,7 @@ private:
         }
         return 0;
     }
+
 };
 
 typedef Graph<Traits> graph;
