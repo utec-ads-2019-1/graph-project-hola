@@ -64,16 +64,30 @@ public:
       sort(Nodes, rindex + 1, right);
     }
 
-    /*void createDS(self){
-        for each node in self{              // modify
-            mapa.insert({newNode,newNode});
+    void createDS(self){
+        for(ni = nodes.begin(), ni != nodes.end(); ni++){
+            mapa.insert({ni,ni});
         }
 
-        for each edge in self{              // modify
-            dsJoin origin and dest;
+        for(ei = edgess.begin(), ei != edgess.edn(); ei++){
+            dsJoin(mapa, ei->origin, ei->dest);
         }
     }
-*/
+
+    node* dsFind(map<node*,node*> &mapa, node* nodo){
+        while(nodo != mapa[nodo]){
+            mapa[nodo] = mapa[mapa[nodo]];
+            nodo = mapa[nodo];
+        }
+        return nodo;
+    }
+
+    void dsJoin(map<node*,node*> &mapa, node* n1, node* n2){
+        node* root1 = dsFind(mapa, n1);
+        node* root2 = dsFind(mapa, n2);
+        mapa[root2] = root1;
+    }
+
     bool insertNode(N name, double xAxis = 0, double yAxis = 0)
     {
       auto tempNode = this->getNode(name);
@@ -162,19 +176,6 @@ public:
         return false;
     }
 
-    node* dsFind(map<node*,node*> &mapa, node* nodo){
-        while(nodo != mapa[nodo]){
-            mapa[nodo] = mapa[mapa[nodo]];
-            nodo = mapa[nodo];
-        }
-        return nodo;
-    }
-
-    void dsJoin(map<node*,node*> &mapa, node* n1, node* n2){
-        node* root1 = dsFind(mapa, n1);
-        node* root2 = dsFind(mapa, n2);
-        mapa[root1] = root2;
-    }
 
     bool findEdge(N orig, N dest)
     {
