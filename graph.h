@@ -64,15 +64,17 @@ public:
       sort(Nodes, rindex + 1, right);
     }
 
+
     void createDS(self){
-        for(ni = nodes.begin(), ni != nodes.end(); ni++){
+        for(ni = nodes.begin(); ni != nodes.end(); ni++){
             mapa.insert({ni,ni});
         }
 
-        for(ei = edgess.begin(), ei != edgess.edn(); ei++){
+        for(ei = edgess.begin(); ei != edgess.edn(); ei++){
             dsJoin(mapa, ei->origin, ei->dest);
         }
     }
+
 
     node* dsFind(map<node*,node*> &mapa, node* nodo){
         while(nodo != mapa[nodo]){
@@ -82,11 +84,13 @@ public:
         return nodo;
     }
 
+
     void dsJoin(map<node*,node*> &mapa, node* n1, node* n2){
         node* root1 = dsFind(mapa, n1);
         node* root2 = dsFind(mapa, n2);
         mapa[root2] = root1;
     }
+
 
     bool insertNode(N name, double xAxis = 0, double yAxis = 0)
     {
@@ -193,7 +197,7 @@ public:
     {
         float dens = 0.0f;
 
-        dens = (float)getNumberEdges()/(float)nodes.nodes.size()/(float)(nodes.nodes.size()-1) ;
+        dens = (float)getNumberEdges()/(float)nodes.size()/(float)(nodes.size()-1) ;
 
         return dens >= 0.6f;
     }
@@ -252,7 +256,7 @@ public:
         else
         {
             container.push(currentNode);
-            while(container.nodes.size()>0)
+            while(container.size()>0)
             {
                 nodeVisited = false;
                 prevNode = currentNode;
@@ -364,17 +368,10 @@ public:
         }
     }
 
-    void print()
-    {
-        for (ni = nodes.begin(); ni != nodes.end() ; ni++)
-        {
-            std::cout << (*ni)->getData() << " -> ";
-            for (ei = (*ni)->edges.begin() ;  ei != (*ni)->edges.end(); ei++)
-            {
-                std::cout << (*ei)->getData() << "|" << (*ei)->nodes[1]-> getData() << " -> ";
-            }
-            std::cout << std::endl;
-        }
+    void print() {
+      for (ei = edgess.begin(); ei != edgess.end(); ei++) {
+        std::c``out << ei->getOrigin()->getData() << " [" << ei->getData() << "] -> " << ei->getDest()->getData() << "\n";
+      }
     }
 
 
@@ -396,24 +393,18 @@ private:
     
     
     edge *getEdge(N orig, N dest) {
-      auto *tmp = new edge(orig, dest);)
+      auto *tmp = new edge(orig, dest);
       if(edgess.size() > 0) {
-        ei = std::find_f(edges.begin(), edges.end(), [&tmp](edge* x) {return  }
+        ei = std::find_if(edgess.begin(), edgess.end(), [&tmp](edge* x) {
+            return (x->getOrigin()->getData() == tmp->getOrigin()->getData()) && (x->getDest()->getData() == tmp->getDest()->getData());
+            });
+        return *ei;
       }
     }
 
-    int getNumberEdges()
-    {
-        int count = 0;
-        if(nodes.size()>0)
-        {
-            for (ni = nodes.begin(); ni != nodes.end() ; ni++)
-            {
-                count = count + (*ni)->edges.nodes.size();
-            }
-            return count;
-        }
-        return 0;
+
+    int getNumberEdges() {
+      return edgess.size();
     }
 
 };
