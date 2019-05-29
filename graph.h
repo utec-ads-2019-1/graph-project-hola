@@ -8,7 +8,7 @@
 #include <map>
 #include "node.h"
 #include "edge.h"
-
+#include <algorithm>
 #include <iostream>
 
 using namespace std;
@@ -64,7 +64,7 @@ public:
       sort(Nodes, rindex + 1, right);
     }
 
-    void createDS(self){
+    /*void createDS(self){
         for each node in self{              // modify
             mapa.insert({newNode,newNode});
         }
@@ -73,7 +73,7 @@ public:
             dsJoin origin and dest;
         }
     }
-
+*/
     bool insertNode(N name, double xAxis = 0, double yAxis = 0)
     {
       auto tempNode = this->getNode(name);
@@ -164,7 +164,7 @@ public:
         return false;
     }
 
-    Node* dsFind(map<node*,node*> &mapa, node* nodo){
+    node* dsFind(map<node*,node*> &mapa, node* nodo){
         while(nodo != mapa[nodo]){
             mapa[nodo] = mapa[mapa[nodo]];
             nodo = mapa[nodo];
@@ -389,7 +389,7 @@ private:
     node *getNode(N name)
     {
         if(nodes.size()>0){
-            ni = std::find_if(nodes.begin(), nodes.end(), [](const auto& x) {return x.getData == name})
+            ni = std::find_if(nodes.begin(), nodes.end(), [&name](const auto& x) {return x->getData() == name;});
             if(ni){
                 return *ni;
             }
@@ -411,24 +411,6 @@ private:
             }
         }
         return NULL;
-    }
-
-    node *minEdge(N name)
-    {
-      if(nodes.size()>0)
-      {
-        for (ni = nodes.begin(); ni != nodes.end(); ni++)
-        {
-          if ((*ni)->getData() == name) {
-            for (ei = (*ni)->edges.begin(); ei != (*ni)->edges.end() - 1; ei++){
-              for (aei = (*ni)->edges.begin(); aei != (*ni)->edges.end() - ei - 1; aei ++) {
-                if ((*aei)->getData() > (*ei)->getData() )
-                  swap(*aei, *ei);
-              }
-            }
-          }       
-        }
-      }
     }
 
     int getNumberEdges()
