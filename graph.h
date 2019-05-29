@@ -90,7 +90,7 @@ public:
         }
     }
 
-    bool insertEdge(N orig, N dest, E height=1, bool direction=0) {
+    bool insertEdge(N orig, N dest, E weight=0, bool direction=0) {
         auto firstNode = getNode(orig);
         auto secondNode = getNode(dest);
         if(firstNode == NULL || secondNode == NULL) return false;
@@ -98,9 +98,7 @@ public:
         if(getEdge(orig, dest) != NULL) return false;
 
         else {
-          auto newEdge = new edge(height);
-          newEdge->nodes[0] = firstNode;
-          newEdge->nodes[1] = secondNode;
+          auto newEdge = new edge(weight, firstNode, secondNode, direction);
           edgess.push_back(newEdge);
           return true;
         }
