@@ -9,8 +9,8 @@ class Edge {
 public:
     typedef typename G::E E;
     typedef typename G::node node;
-    node* origin = nullptr;
-    node* dest = nullptr;
+    node* origin;
+    node* dest;
 
     Edge(){data = 0; dir = false; origin = nullptr, dest = nullptr;}
     Edge(E value, node* orig, node* dst, bool direction) {data = value; origin = orig; dest = dst; dir = direction;}
@@ -32,6 +32,7 @@ public:
       origin = eOrig;
       dest = eDest;
     }
+  
 private:
     E data;
     bool dir;

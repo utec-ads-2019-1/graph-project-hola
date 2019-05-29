@@ -83,7 +83,7 @@ public:
         }
         return result;
     }*/
-    
+
 
     bool insertNode(N name, double xAxis = 0, double yAxis = 0) {
       auto tempNode = getNode(name);
@@ -365,11 +365,11 @@ private:
     EdgeSeq edgess;
     NodeIte ni;
     EdgeIte ei;
-    map<N,N> mapa; 
+    map<N,N> mapa;
 
     node *getNode(N name) {
       auto *tmp = new node(name);
-      
+
       if(nodes.size()>0) {
         ni = std::find_if(nodes.begin(), nodes.end(), [&tmp](node* x) {return x->getData() == tmp->getData();});
         if(ni != nodes.end())  return *ni;
@@ -378,9 +378,10 @@ private:
       
       else return nullptr;
     }
-    
-    
+
+
     edge *getEdge(N orig, N dest) {
+
       edge* tmp = new edge(orig, dest);
       
       if(edgess.size() > 0) {
@@ -400,12 +401,13 @@ private:
       return edgess.size();
     }
 
-
+/*
     void sort() {
       if (edgess.size() > 0) {
         edgess.sort([](edge* a, edge* b) {return a->getData() < b->getData();});
        }
     }
+*/
 };
 
 typedef Graph<Traits> graph;
