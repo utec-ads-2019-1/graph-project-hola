@@ -386,18 +386,20 @@ private:
 
     node *getNode(N name) {
       auto *tmp = new node(name);
-
+      
       if(nodes.size()>0) {
         ni = std::find_if(nodes.begin(), nodes.end(), [&tmp](node* x) {return x->getData() == tmp->getData();});
         return *ni;
        }
     }
-
- /*   edge *getEdge(N orig, N dest) {
-      if (edges.size() > 0) {
-        ei = std::find_if
+    
+    
+    edge *getEdge(N orig, N dest) {
+      auto *tmp = new edge(orig, dest);)
+      if(edgess.size() > 0) {
+        ei = std::find_f(edges.begin(), edges.end(), [&tmp](edge* x) {return  }
       }
-    }*/
+    }
 
     int getNumberEdges()
     {
