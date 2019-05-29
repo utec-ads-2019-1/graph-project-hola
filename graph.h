@@ -66,8 +66,8 @@ public:
 
 
     void createDS(self){
-        for(ni = nodes.begin(); ni != nodes.end(); ni++){
-            mapa.insert({ni,ni});
+        for(auto ni : nodes){
+            mapa.insert({ni->getData(),ni->getData() });
         }
 
         for(ei = edgess.begin(); ei != edgess.edn(); ei++){
@@ -76,21 +76,31 @@ public:
     }
 
 
-    node* dsFind(map<node*,node*> &mapa, node* nodo){
-        while(nodo != mapa[nodo]){
-            mapa[nodo] = mapa[mapa[nodo]];
-            nodo = mapa[nodo];
+    node* dsFind(map<N,N> &mapa, node* Nodo){
+        N nodo = Nodo->getData();
+        while(Nodo != mapa[Nodo]){
+            mapa[Nodo] = mapa[mapa[Nodo]];
+            Nodo = mapa[Nodo];
         }
-        return nodo;
+        return Nodo;
     }
 
 
-    void dsJoin(map<node*,node*> &mapa, node* n1, node* n2){
-        node* root1 = dsFind(mapa, n1);
-        node* root2 = dsFind(mapa, n2);
+    void dsJoin(map<N,N> &mapa, node* n1, node* n2){
+        N root1 = dsFind(mapa, n1);
+        N root2 = dsFind(mapa, n2);
         mapa[root2] = root1;
     }
 
+  /*  bool isConnected(){
+        bool result = false;
+        if(!mapa.empty()){
+            N val = mapa.begin()->second;
+            result = std::all_of(std::next(mapa.begin()),mapa.end(),[val](typename <insert map type>::const_reference t){return t->second == val;});
+        }
+        return result;
+    }*/
+    
 
     bool insertNode(N name, double xAxis = 0, double yAxis = 0)
     {
@@ -189,7 +199,7 @@ public:
 
     bool findNode(N name)
     {
-        if(getNode(name) == NULL) return false;
+        if(!getNode(name)) return false;
         else return true;
     }
 
@@ -380,14 +390,20 @@ private:
     EdgeSeq edgess;
     NodeIte ni;
     EdgeIte ei;
-    map<node*,node*> mapa; 
+    map<N,N> mapa; 
 
     node *getNode(N name) {
       auto *tmp = new node(name);
       
       if(nodes.size()>0) {
         ni = std::find_if(nodes.begin(), nodes.end(), [&tmp](node* x) {return x->getData() == tmp->getData();});
-        return *ni;
+        if(ni != nodes.end()){
+            return *ni;
+        }else{
+            return nullptr;
+        }
+       }else{
+        return nullptr;
        }
     }
     
