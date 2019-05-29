@@ -12,8 +12,8 @@ public:
     EdgeSeq edges;
 
     Node(){}
-    Node(N value){data = value; x = y = 0;}
-    Node(N value, double xAxis, double yAxis){data = value; x= xAxis; y = yAxis;}
+    Node(N value){data = value; x = y = reached = 0;}
+    Node(N value, double xAxis, double yAxis){data = value; x= xAxis; y = yAxis, reached = 0;}
 
     N getData() {return data;}
     void setData(N newData) {data = newData;}
@@ -24,10 +24,14 @@ public:
     double getY(){return y;}
     void setY(double Y){y = Y;}
 
+    bool getReached() {return reached;}
+    void setReached(bool Reached) {reached = Reached;}
+
 private:
     N data;
     double x;
     double y;
+    bool reached;
 };
 
 #endif
