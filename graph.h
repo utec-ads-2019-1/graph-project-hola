@@ -90,24 +90,17 @@ public:
         }
     }
 
-    bool insertEdge(N orig, N dest, E height=1, bool direction=0)
-    {
+    bool insertEdge(N orig, N dest, E weight=0, bool direction=0) {
         auto firstNode = getNode(orig);
         auto secondNode = getNode(dest);
-        if(firstNode == NULL || secondNode == NULL)
-            return false;
+        if(firstNode == NULL || secondNode == NULL) return false;
 
-        if(getEdge(orig, dest) != NULL)
-        {
-            return false;
-        }
-        else
-        {
-            auto newEdge = new edge(height);
-            newEdge->nodes[0] = firstNode;
-            newEdge->nodes[1] = secondNode;
-            firstNode->edges.push_back(newEdge);
-            return true;
+        if(getEdge(orig, dest) != NULL) return false;
+
+        else {
+          auto newEdge = new edge(weight, firstNode, secondNode, direction);
+          edgess.push_back(newEdge);
+          return true;
         }
     }
 
@@ -386,9 +379,9 @@ public:
 
 private:
     NodeSeq nodes;
+    EdgeSeq edgess;
     NodeIte ni;
     EdgeIte ei;
-    EdgeIte aei;
     map<node*,node*> mapa; 
 
     node *getNode(N name)
