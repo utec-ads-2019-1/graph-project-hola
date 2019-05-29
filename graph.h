@@ -423,6 +423,13 @@ private:
       return edgess.size();
     }
 
+
+    void sort() {
+      if (edgess.size() > 0) {
+        edgess.sort([](edge* a, edgess* b) {return a->getData() < b->getData()});
+      }
+    }
+
 };
 
 typedef Graph<Traits> graph;
