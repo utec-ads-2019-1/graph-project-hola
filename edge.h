@@ -13,6 +13,7 @@ public:
 
     Edge(){data = 0; dir = false;}
     Edge(E value, node* origin, node* dest, bool direction) {origin = origin; dest = dest; data = value; dir = direction;}
+    Edge(node* origin, node* dest) {origin = origin; dest = dest;}
     Edge(E value){data = value; dir = false;}
     Edge(E value, bool direction) {data = value; dir = direction;}
 
@@ -20,7 +21,8 @@ public:
     void setData(E newData) {data = newData;}
     bool getDir() { return dir;}
     void setDir(bool newDir) { dir = newDir;}
-
+    node* getOrigin(){return origin;}
+    node* getDest(){return dest;}
 private:
     E data;
     bool dir;
