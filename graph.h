@@ -6,7 +6,6 @@
 #include <stack>
 #include <queue>
 #include <map>
-
 #include "node.h"
 #include "edge.h"
 
@@ -48,9 +47,9 @@ public:
         // TODO
     }
 
-    int size()
+    int nodes.size()
     {
-        return nodes.size();
+        return nodes.nodes.size();
     }
 
 
@@ -71,6 +70,15 @@ public:
       sort(Nodes, rindex + 1, right);
     }
 
+    void createDS(self){
+        for each node in self{              // modify
+            mapa.insert({newNode,newNode});
+        }
+
+        for each edge in self{              // modify
+            dsJoin origin and dest;
+        }
+    }
 
     bool insertNode(N name, double xAxis = 0, double yAxis = 0)
     {
@@ -83,7 +91,6 @@ public:
         else
         {
             auto newNode = new node(name, xAxis, yAxis);
-            mapa.insert({newNode,newNode});
             nodes.push_back(newNode);
             return true;
         }
@@ -115,7 +122,7 @@ public:
         bool flag = false;
         NodeIte tempIte;
 
-        if(size()<=0) return false;
+        if(nodes.size()<=0) return false;
         else
         {
             for (ni = nodes.begin(); ni != nodes.end() ; ni++)
@@ -146,7 +153,7 @@ public:
     {
         bool flag = false;
 
-        if(size()>0)
+        if(nodes.size()>0)
         {
             for (ni = nodes.begin(); ni != nodes.end(); ni++)
             {
@@ -168,7 +175,7 @@ public:
         return false;
     }
 
-    Node* dsFind(map<Node*,Node*> &mapa, Node* nodo){
+    Node* dsFind(map<node*,node*> &mapa, node* nodo){
         while(nodo != mapa[nodo]){
             mapa[nodo] = mapa[mapa[nodo]];
             nodo = mapa[nodo];
@@ -176,9 +183,9 @@ public:
         return nodo;
     }
 
-    void dsJoin(mapa<Node*,Node*> &mapa, Node* n1, Node* n2){
-        Node* root1 = dsFind(mapa, n1);
-        Node* root2 = dsFind(mapa, n2);
+    void dsJoin(mapa<node*,node*> &mapa, node* n1, node* n2){
+        node* root1 = dsFind(mapa, n1);
+        node* root2 = dsFind(mapa, n2);
         mapa[root1] = root2;
     }
 
@@ -198,7 +205,7 @@ public:
     {
         float dens = 0.0f;
 
-        dens = (float)getNumberEdges()/(float)nodes.size()/(float)(nodes.size()-1) ;
+        dens = (float)getNumberEdges()/(float)nodes.nodes.size()/(float)(nodes.nodes.size()-1) ;
 
         return dens >= 0.6f;
     }
@@ -224,7 +231,7 @@ public:
 
       else
       {
-        while (controller != size()) {
+        while (controller != nodes.size()) {
           
           }
 
@@ -257,7 +264,7 @@ public:
         else
         {
             container.push(currentNode);
-            while(container.size()>0)
+            while(container.nodes.size()>0)
             {
                 nodeVisited = false;
                 prevNode = currentNode;
@@ -323,7 +330,7 @@ public:
         else
         {
             container.push(currentNode);
-            while(container.size()>0)
+            while(container.nodes.size()>0)
             {
                 nodeVisited = false;
                 prevNode = currentNode;
@@ -388,11 +395,11 @@ private:
     NodeIte ni;
     EdgeIte ei;
     EdgeIte aei;
-    map<Node*,Node*> mapa; 
+    map<node*,node*> mapa; 
 
     node *getNode(N name)
     {
-        if(size()>0)
+        if(nodes.size()>0)
         {
             node *tempNode = nodes.front();
             for (ni = nodes.begin(); ni != nodes.end() ; ni++)
@@ -407,7 +414,7 @@ private:
 
     edge *getEdge(N orig, N dest)
     {
-        if(size()>0)
+        if(nodes.size()>0)
         {
             for (ni = nodes.begin(); ni != nodes.end() ; ni++)
             {
@@ -423,7 +430,7 @@ private:
 
     node *minEdge(N name)
     {
-      if(size()>0)
+      if(nodes.size()>0)
       {
         for (ni = nodes.begin(); ni != nodes.end(); ni++)
         {
@@ -442,11 +449,11 @@ private:
     int getNumberEdges()
     {
         int count = 0;
-        if(size()>0)
+        if(nodes.size()>0)
         {
             for (ni = nodes.begin(); ni != nodes.end() ; ni++)
             {
-                count = count + (*ni)->edges.size();
+                count = count + (*ni)->edges.nodes.size();
             }
             return count;
         }
