@@ -204,6 +204,7 @@ public:
 
       int controller = 0;
       node* currentNode = getNode(edgess.front()->getOrigin()->getData());
+      cout << edgess.front()->getData() << " <-\n";
 
       if (currentNode == nullptr) return nullptr;
 
@@ -401,13 +402,12 @@ private:
       return edgess.size();
     }
 
-/*
+
     void sort() {
       if (edgess.size() > 0) {
         edgess.sort([](edge* a, edge* b) {return a->getData() < b->getData();});
        }
     }
-*/
 };
 
 typedef Graph<Traits> graph;
