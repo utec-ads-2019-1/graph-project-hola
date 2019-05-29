@@ -82,20 +82,21 @@ public:
         return nodo;
     }
 
-    bool isConnected(){
-        node* base = nodes.begin();
-        for(ni = nodes.begin()+1; ni != nodes.end(); ni++){
-            if(ni != base){
-                return false;
-            }
-        }
-        return true;
-    }
 
     void dsJoin(map<node*,node*> &mapa, node* n1, node* n2){
         node* root1 = dsFind(mapa, n1);
         node* root2 = dsFind(mapa, n2);
         mapa[root2] = root1;
+    }
+
+    bool isConnected(){
+        node* base = *(nodes.begin());
+        for(ni = nodes.begin(); ni != nodes.end(); ni++){
+            if(dsFind(mapa,*ni) != dsFind(mapa,base)){
+                return false;
+            }
+        }
+        return true;
     }
 
     bool insertNode(N name, double xAxis = 0, double yAxis = 0)

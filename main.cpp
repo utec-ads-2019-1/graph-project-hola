@@ -22,6 +22,7 @@ int main(int argc, char *argv[]) {
     graph1.insertNode('G');
 
     std::cout << graph1.findNode('A') << "\n";
+    std::cout << graph1.isConnected() << "\n";
  /*   graph1.insertEdge('A', 'G', 13);
     graph1.insertEdge('A', 'D', 8);
     graph1.insertEdge('B', 'E', 52);
