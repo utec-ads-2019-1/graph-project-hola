@@ -53,21 +53,10 @@ public:
     }
 
 
-    void sort (vector<node*> &Nodes, int left, int right) {
-      if (left >= right) return;
-      int pivot = Nodes[left + (right - left)/2]->edges->getData();
-      int lindex = left - 1;
-      int rindex = right + 1;
-
-      while(1) {
-        while(Nodes[++rindex]->edges->getData() < pivot);
-        while(Nodes[--rindex]->edges->getData() > pivot);
-        if(lindex >= rindex) break;
-        swap (Nodes[lindex], Nodes[rindex]);
+    void sort (, int left, int right) {
+      std::sort(edges.begin(), edges.end(), [](const edge &a, const edge &b)) {
+        return a.getData()< b.getData();
       }
-
-      sort(Nodes, left, rindex);
-      sort(Nodes, rindex + 1, right);
     }
 
 
@@ -368,9 +357,9 @@ public:
 
 private:
     NodeSeq nodes;
+    EdgeSeq edgess;
     NodeIte ni;
     EdgeIte ei;
-    EdgeIte aei;
 
     node *getNode(N name)
     {
@@ -416,6 +405,7 @@ private:
                   swap(*aei, *ei);
               }
             }
+            return *ni; 
           }       
         }
       }
