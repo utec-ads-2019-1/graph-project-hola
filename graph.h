@@ -5,6 +5,7 @@
 #include <list>
 #include <stack>
 #include <queue>
+#include <map>
 
 #include "node.h"
 #include "edge.h"
@@ -82,6 +83,7 @@ public:
         else
         {
             auto newNode = new node(name, xAxis, yAxis);
+            mapa.insert({newNode,newNode});
             nodes.push_back(newNode);
             return true;
         }
@@ -135,6 +137,7 @@ public:
             if(!flag)
                 return false;
             nodes.erase(tempIte);
+            mapa.erase(tempIte);
             return true;
         }
     }
@@ -163,6 +166,20 @@ public:
             return true;
         }
         return false;
+    }
+
+    Node* dsFind(map<Node*,Node*> &mapa, Node* nodo){
+        while(nodo != mapa[nodo]){
+            mapa[nodo] = mapa[mapa[nodo]];
+            nodo = mapa[nodo];
+        }
+        return nodo;
+    }
+
+    void dsJoin(mapa<Node*,Node*> &mapa, Node* n1, Node* n2){
+        Node* root1 = dsFind(mapa, n1);
+        Node* root2 = dsFind(mapa, n2);
+        mapa[root1] = root2;
     }
 
     bool findEdge(N orig, N dest)
@@ -371,6 +388,7 @@ private:
     NodeIte ni;
     EdgeIte ei;
     EdgeIte aei;
+    map<Node*,Node*> mapa; 
 
     node *getNode(N name)
     {
