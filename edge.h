@@ -2,6 +2,7 @@
 #define EDGE_H
 
 #include "node.h"
+#include <iostream>
 
 template <typename G>
 class Edge {
@@ -11,9 +12,9 @@ public:
     node* origin = nullptr;
     node* dest = nullptr;
 
-    Edge(){data = 0; dir = false;}
-    Edge(E value, node* origin, node* dest, bool direction) {origin = origin; dest = dest; data = value; dir = direction;}
-    Edge(node* origin, node* dest) {origin = origin; dest = dest;}
+    Edge(){data = 0; dir = false; origin = nullptr, dest = nullptr;}
+    Edge(E value, node* orig, node* dst, bool direction) {data = value; origin = orig; dest = dst; dir = direction;}
+    Edge(node* orig, node* dst) {origin = orig; dest = dst;}
     Edge(E value){data = value; dir = false;}
     Edge(E value, bool direction) {data = value; dir = direction;}
 
@@ -23,6 +24,14 @@ public:
     void setDir(bool newDir) { dir = newDir;}
     node* getOrigin(){return origin;}
     node* getDest(){return dest;}
+
+    Edge (E orig, E dst) {
+      node* eOrig = new node(orig);
+      node* eDest = new node(dst);
+
+      origin = eOrig;
+      dest = eDest;
+    }
 private:
     E data;
     bool dir;
