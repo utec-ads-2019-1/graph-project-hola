@@ -65,11 +65,11 @@ public:
     }
 
     void createDS(self){
-        for(ni = nodes.begin(), ni != nodes.end(); ni++){
+        for(ni = nodes.begin(); ni != nodes.end(); ni++){
             mapa.insert({ni,ni});
         }
 
-        for(ei = edgess.begin(), ei != edgess.edn(); ei++){
+        for(ei = edgess.begin(); ei != edgess.edn(); ei++){
             dsJoin(mapa, ei->origin, ei->dest);
         }
     }
@@ -80,6 +80,16 @@ public:
             nodo = mapa[nodo];
         }
         return nodo;
+    }
+
+    bool isConnected(){
+        node* base = nodes.begin();
+        for(ni = nodes.begin()+1; ni != nodes.end(); ni++){
+            if(ni != base){
+                return false;
+            }
+        }
+        return true;
     }
 
     void dsJoin(map<node*,node*> &mapa, node* n1, node* n2){
