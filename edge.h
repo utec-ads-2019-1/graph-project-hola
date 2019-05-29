@@ -8,12 +8,12 @@ class Edge {
 public:
     typedef typename G::E E;
     typedef typename G::node node;
-    node* origin = nullptr;
-    node* dest = nullptr;
+    node* origin;
+    node* dest;
 
     Edge(){data = 0; dir = false;}
-    Edge(E value, node* origin, node* dest, bool direction) {origin = origin; dest = dest; data = value; dir = direction;}
-    Edge(node* origin, node* dest) {origin = origin; dest = dest;}
+    Edge(E value, node* orig, node* des, bool direction) {origin = orig; dest = des; data = value; dir = direction;}
+    Edge(node* orig, node* des) {origin = orig; dest = des;}
     Edge(E value){data = value; dir = false;}
     Edge(E value, bool direction) {data = value; dir = direction;}
 

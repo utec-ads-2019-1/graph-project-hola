@@ -100,7 +100,7 @@ public:
         }
         return result;
     }*/
-    
+
 
     bool insertNode(N name, double xAxis = 0, double yAxis = 0)
     {
@@ -218,7 +218,7 @@ public:
     bool bipartite();
 
 
-    Graph* MST_Prim(N orig) 
+    Graph* MST_Prim(N orig)
     {
       auto newGraph = new Graph;
 
@@ -234,7 +234,7 @@ public:
       else
       {
         while (controller != nodes.size()) {
-          
+
           }
 
         return newGraph;
@@ -390,11 +390,11 @@ private:
     EdgeSeq edgess;
     NodeIte ni;
     EdgeIte ei;
-    map<N,N> mapa; 
+    map<N,N> mapa;
 
     node *getNode(N name) {
       auto *tmp = new node(name);
-      
+
       if(nodes.size()>0) {
         ni = std::find_if(nodes.begin(), nodes.end(), [&tmp](node* x) {return x->getData() == tmp->getData();});
         if(ni != nodes.end()){
@@ -406,14 +406,21 @@ private:
         return nullptr;
        }
     }
-    
-    
+
+
     edge *getEdge(N orig, N dest) {
-      auto *tmp = new edge(orig, dest);
+
       if(edgess.size() > 0) {
-        ei = std::find_if(edgess.begin(), edgess.end(), [&tmp](edge* x) {
-            return (x->getOrigin()->getData() == tmp->getOrigin()->getData()) && (x->getDest()->getData() == tmp->getDest()->getData());
-            });
+        auto origNode = getNode(orig);
+        auto destNode = getNode(dest);
+        if(origNode == NULL || destNode == NULL) return NULL;
+
+        for (ei = (*ni)->edges.begin() ;  ei != (*ni)->edges.end(); ei++)
+        {
+          if((*ei)->getOrigin()->getData() == orig && (*ei)->getDest()->getData() == dest)
+              return *ei;
+        }
+
         return *ei;
       }
     }
@@ -423,13 +430,13 @@ private:
       return edgess.size();
     }
 
-
+/*
     void sort() {
       if (edgess.size() > 0) {
         edgess.sort([](edge* a, edgess* b) {return a->getData() < b->getData()});
       }
     }
-
+*/
 };
 
 typedef Graph<Traits> graph;

@@ -44,9 +44,9 @@ int main(int argc, char *argv[]) {
 
     graph1.print();
 
-    auto prim = graph1.MST_Prim('A');
-    prim->print();
-    
+    //auto prim = graph1.MST_Prim('A');
+    //prim->print();
+
  /*   cout << "\n\nBFS: \n" ;
     auto bfs1 = graph1.BFS('B');
     bfs1->print();
