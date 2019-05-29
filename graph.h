@@ -236,7 +236,7 @@ public:
 
     void MST_Kruskal();
 
-    Graph* BFS(N orig)
+   /*  Graph* BFS(N orig)
     {
         auto newGraph = new Graph;
 
@@ -366,11 +366,11 @@ public:
             }
             return newGraph;
         }
-    }
+    } */
 
     void print() {
-      for (ei = edgess.begin(); ei != edgess.end(); ei++) {
-        std::c``out << ei->getOrigin()->getData() << " [" << ei->getData() << "] -> " << ei->getDest()->getData() << "\n";
+      for (auto ei : edgess) {
+        std::cout << ei->getOrigin()->getData() << " [" << ei->getData() << "] -> " << ei->getDest()->getData() << "\n";
       }
     }
 
