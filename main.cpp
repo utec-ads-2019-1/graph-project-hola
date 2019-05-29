@@ -23,7 +23,6 @@ int main(int argc, char *argv[]) {
 
     graph1.insertEdge('A', 'G', 13);
     graph1.insertEdge('A', 'D', 8);
-    cout << "seg?\n";
     graph1.insertEdge('B', 'E', 52);
     graph1.insertEdge('B', 'C', 17);
     graph1.insertEdge('B', 'D', 83);
@@ -40,7 +39,6 @@ int main(int argc, char *argv[]) {
     graph1.insertEdge('F', 'B', 8);
     graph1.insertEdge('G', 'D', 17);
     
-    graph1.findEdge('A', 'G');
     cout << "\nDensity: " << graph1.density() << endl << endl;
 
     graph1.print();
