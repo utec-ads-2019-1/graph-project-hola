@@ -53,19 +53,26 @@ public:
             mapa.insert({ni->getData(),ni->getData() });
         }
 
-        for(ei = edgess.begin(); ei != edgess.edn(); ei++){
+
+    void createDS(){
+        for(auto ni : nodes){
+            mapa.insert({ni->getData(),ni->getData() });
+        }
+
+        for(auto ei : edgess){
             dsJoin(mapa, ei->origin, ei->dest);
         }
+        return Nodo;
     }
 
 
-    node* dsFind(map<N,N> &mapa, node* Nodo){
+    N dsFind(map<N,N> &mapa, node* Nodo){
         N nodo = Nodo->getData();
-        while(Nodo != mapa[Nodo]){
-            mapa[Nodo] = mapa[mapa[Nodo]];
-            Nodo = mapa[Nodo];
+        while(nodo != mapa[nodo]){
+            mapa[nodo] = mapa[mapa[nodo]];
+            nodo = mapa[nodo];
         }
-        return Nodo;
+        return nodo;
     }
 
 
@@ -75,14 +82,18 @@ public:
         mapa[root2] = root1;
     }
 
-  /*  bool isConnected(){
-        bool result = false;
-        if(!mapa.empty()){
-            N val = mapa.begin()->second;
-            result = std::all_of(std::next(mapa.begin()),mapa.end(),[val](typename <insert map type>::const_reference t){return t->second == val;});
-        }
-        return result;
-    }*/
+
+    bool insertNode(N name, double xAxis = 0, double yAxis = 0) {
+      auto tempNode = getNode(name);
+      
+      if(tempNode) return false;
+      
+      else {
+        auto newNode = new node(name, xAxis, yAxis);
+        nodes.push_back(newNode);
+        return true;
+      }
+    }
 
 
     bool insertNode(N name, double xAxis = 0, double yAxis = 0) {
@@ -193,7 +204,17 @@ public:
     }
 
     bool grade(node a);
-    bool connected();
+
+    bool connected(){
+        auto val = mapa.begin()->second;
+        for(auto it = mapa.begin();it != mapa.end();it++){
+            if(it->second != val){
+                return false;
+            }
+        }
+        return true;
+    }
+
     bool strongConnected();
     bool bipartite();
 
@@ -366,7 +387,7 @@ private:
     EdgeSeq edgess;
     NodeIte ni;
     EdgeIte ei;
-    map<N,N> mapa;
+    map<N,N> mapa; 
 
     node *getNode(N name) {
       auto *tmp = new node(name);
@@ -374,6 +395,7 @@ private:
       if(nodes.size()>0) {
         ni = std::find_if(nodes.begin(), nodes.end(), [&tmp](node* x) {return x->getData() == tmp->getData();});
         if(ni != nodes.end())  return *ni;
+        
         else return nullptr;
        }
       

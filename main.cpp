@@ -20,6 +20,7 @@ int main(int argc, char *argv[]) {
     graph1.insertNode('E');
     graph1.insertNode('F');
     graph1.insertNode('G');
+    graph1.createDS();
 
     graph1.insertEdge('A', 'G', 13);
     graph1.insertEdge('A', 'D', 8);
