@@ -386,8 +386,8 @@ private:
 
     node *getNode(N name) {
       auto *tmp = new node(name);
-
-      if(nodes.size() > 0) {
+      
+      if(nodes.size()>0) {
         ni = std::find_if(nodes.begin(), nodes.end(), [&tmp](node* x) {return x->getData() == tmp->getData();});
         return *ni;
        }
