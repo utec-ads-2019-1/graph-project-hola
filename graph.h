@@ -53,9 +53,16 @@ public:
     }
 
 
+    void sort (, int left, int right) {
+      std::sort(edges.begin(), edges.end(), [](const edge &a, const edge &b)) {
+        return a.getData()< b.getData();
+      }
+    }
+
+
     bool insertNode(N name, double xAxis = 0, double yAxis = 0)
     {
-        auto tempNode = this->getNode(name);
+      auto tempNode = this->getNode(name);
         if(tempNode != NULL)
         {
             if(tempNode->getData() == name)
@@ -173,7 +180,33 @@ public:
     bool strongConnected();
     bool bipartite();
 
-    void MST_Prim();
+
+    Graph* MST_Prim(N orig) 
+    {
+      auto newGraph = new Graph;
+
+      for (ni = this->nodes.begin(); ni != this->nodes.end(); ni++)
+            newGraph->insertNode((*ni)->getData(), (*ni)->getX(), (*ni)->getY());
+
+      int controller = 0;
+      auto currentNode = getNode(orig);
+
+      if (currentNode == NULL)
+        return NULL;
+
+      else
+      {
+        while (controller != size()) {
+          
+          }
+
+        return newGraph;
+
+      }
+
+   }
+
+
     void MST_Kruskal();
 
     Graph* BFS(N orig)
@@ -324,6 +357,7 @@ public:
 
 private:
     NodeSeq nodes;
+    EdgeSeq edgess;
     NodeIte ni;
     EdgeIte ei;
 
@@ -358,6 +392,25 @@ private:
         return NULL;
     }
 
+    node *minEdge(N name)
+    {
+      if(size()>0)
+      {
+        for (ni = nodes.begin(); ni != nodes.end(); ni++)
+        {
+          if ((*ni)->getData() == name) {
+            for (ei = (*ni)->edges.begin(); ei != (*ni)->edges.end() - 1; ei++){
+              for (aei = (*ni)->edges.begin(); aei != (*ni)->edges.end() - ei - 1; aei ++) {
+                if ((*aei)->getData() > (*ei)->getData() )
+                  swap(*aei, *ei);
+              }
+            }
+            return *ni; 
+          }       
+        }
+      }
+    }
+
     int getNumberEdges()
     {
         int count = 0;
@@ -371,6 +424,7 @@ private:
         }
         return 0;
     }
+
 };
 
 typedef Graph<Traits> graph;
