@@ -170,7 +170,7 @@ public:
         return nodo;
     }
 
-    void dsJoin(mapa<node*,node*> &mapa, node* n1, node* n2){
+    void dsJoin(map<node*,node*> &mapa, node* n1, node* n2){
         node* root1 = dsFind(mapa, n1);
         node* root2 = dsFind(mapa, n2);
         mapa[root1] = root2;
@@ -386,18 +386,14 @@ private:
 
     node *getNode(N name)
     {
-        if(nodes.size()>0)
-        {
-            node *tempNode = nodes.front();
-            for (ni = nodes.begin(); ni != nodes.end() ; ni++)
-            {
-                if((*ni)->getData() == name)
-                    return *ni;
+        if(nodes.size()>0){
+            ni = std::find_if(nodes.begin(), nodes.end(), [](const auto& x) {return x.getData == name})
+            if(ni){
+                return *ni;
             }
             return NULL;
-        }
-        return NULL;
     }
+}
 
     edge *getEdge(N orig, N dest)
     {
