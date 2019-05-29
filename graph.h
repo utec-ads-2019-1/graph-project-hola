@@ -395,20 +395,10 @@ private:
     }
 }
 
-    edge *getEdge(N orig, N dest)
-    {
-        if(nodes.size()>0)
-        {
-            for (ni = nodes.begin(); ni != nodes.end() ; ni++)
-            {
-                for (ei = (*ni)->edges.begin() ;  ei != (*ni)->edges.end(); ei++)
-                {
-                    if((*ei)->nodes[0]->getData() == orig && (*ei)->nodes[1]->getData() == dest)
-                        return *ei;
-                }
-            }
-        }
-        return NULL;
+    edge *getEdge(N orig, N dest) {
+      if (edges.size() > 0) {
+        ei = std::find_if
+      }
     }
 
     node *minEdge(N name)
