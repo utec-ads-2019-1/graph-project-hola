@@ -90,7 +90,7 @@ public:
         }
     }
 
-    bool insertEdge(N orig, N dest, E height=1, bool direction=0) {
+    bool insertEdge(N orig, N dest, E weight=0, bool direction=0) {
         auto firstNode = getNode(orig);
         auto secondNode = getNode(dest);
         if(firstNode == NULL || secondNode == NULL) return false;
@@ -98,9 +98,7 @@ public:
         if(getEdge(orig, dest) != NULL) return false;
 
         else {
-          auto newEdge = new edge(height);
-          newEdge->nodes[0] = firstNode;
-          newEdge->nodes[1] = secondNode;
+          auto newEdge = new edge(weight, firstNode, secondNode, direction);
           edgess.push_back(newEdge);
           return true;
         }
@@ -390,6 +388,7 @@ private:
     {
         if(nodes.size()>0){
             ni = std::find_if(nodes.begin(), nodes.end(), [&name](const auto& x) {return x->getData() == name;});
+            
             if(ni){
                 return *ni;
             }
@@ -397,20 +396,10 @@ private:
     }
 }
 
-    edge *getEdge(N orig, N dest)
-    {
-        if(nodes.size()>0)
-        {
-            for (ni = nodes.begin(); ni != nodes.end() ; ni++)
-            {
-                for (ei = (*ni)->edges.begin() ;  ei != (*ni)->edges.end(); ei++)
-                {
-                    if((*ei)->nodes[0]->getData() == orig && (*ei)->nodes[1]->getData() == dest)
-                        return *ei;
-                }
-            }
-        }
-        return NULL;
+    edge *getEdge(N orig, N dest) {
+      if (edges.size() > 0) {
+        ei = std::find_if
+      }
     }
 
     int getNumberEdges()

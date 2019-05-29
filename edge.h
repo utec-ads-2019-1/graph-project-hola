@@ -12,7 +12,7 @@ public:
     node* dest = nullptr;
 
     Edge(){data = 0; dir = false;}
-    Edge(node* origin, node* dest) {origin = origin; dest = dest; data = 0; dir = 0;}
+    Edge(E value, node* origin, node* dest, bool direction) {origin = origin; dest = dest; data = value; dir = direction;}
     Edge(E value){data = value; dir = false;}
     Edge(E value, bool direction) {data = value; dir = direction;}
 
