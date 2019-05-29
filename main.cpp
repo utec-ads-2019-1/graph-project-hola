@@ -38,19 +38,19 @@ int main(int argc, char *argv[]) {
     graph1.insertEdge('F', 'A', 12);
     graph1.insertEdge('F', 'B', 8);
     graph1.insertEdge('G', 'D', 17);
-    
+
     cout << "\nDensity: " << graph1.density() << endl << endl;
 
     graph1.print();
 
-    auto prim = graph1.MST_Prim();
-    prim->print();
-    
- /*   cout << "\n\nBFS: \n" ;
+ //   auto prim = graph1.MST_Prim();
+ //   prim->print();
+
+    cout << "\n\nBFS: \n" ;
     auto bfs1 = graph1.BFS('B');
     bfs1->print();
 
-    cout << "\n\nDFS: \n" ;
+ /*   cout << "\n\nDFS: \n" ;
     auto dfs1 = graph1.DFS('B');
     dfs1->print();
 */

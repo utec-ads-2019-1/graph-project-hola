@@ -75,22 +75,22 @@ public:
         mapa[root2] = root1;
     }
 
-  /*  bool isConnected(){
-        bool result = false;
-        if(!mapa.empty()){
-            N val = mapa.begin()->second;
-            result = std::all_of(std::next(mapa.begin()),mapa.end(),[val](typename <insert map type>::const_reference t){return t->second == val;});
-        }
-        return result;
-    }*/
+    /*  bool isConnected(){
+          bool result = false;
+          if(!mapa.empty()){
+              N val = mapa.begin()->second;
+              result = std::all_of(std::next(mapa.begin()),mapa.end(),[val](typename <insert map type>::const_reference t){return t->second == val;});
+          }
+          return result;
+      }*/
 
 
     bool insertNode(N name, double xAxis = 0, double yAxis = 0) {
-      auto tempNode = getNode(name);
-      
-      if(tempNode) return false;
+        auto tempNode = getNode(name);
 
-      else {
+        if(tempNode) return false;
+
+        else {
             auto newNode = new node(name, xAxis, yAxis);
             nodes.push_back(newNode);
             return true;
@@ -100,15 +100,15 @@ public:
     bool insertEdge(N orig, N dest, E weight=0, bool direction=0) {
         auto firstNode = getNode(orig);
         auto secondNode = getNode(dest);
-        
+
         if(firstNode == nullptr || secondNode == nullptr) { return false;}
 
         else if(getEdge(orig, dest) != nullptr) return false;
-  
+
         else {
-          edge* newEdge = new edge(weight, firstNode, secondNode, direction);
-          edgess.push_back(newEdge);
-          return true;
+            edge* newEdge = new edge(weight, firstNode, secondNode, direction);
+            edgess.push_back(newEdge);
+            return true;
         }
     }
 
@@ -185,7 +185,7 @@ public:
 
 
     bool density() {
-       float dens = 0.0f;
+        float dens = 0.0f;
 
         dens = (float)getNumberEdges()/((float)nodes.size()*(float)(nodes.size()-1)) ;
 
@@ -199,30 +199,29 @@ public:
 
 
     Graph* MST_Prim() {
-      auto newGraph = new Graph;
-      sort();
+        auto newGraph = new Graph;
+        sort();
 
-      int controller = 0;
-      node* currentNode = getNode(edgess.front()->getOrigin()->getData());
-      cout << edgess.front()->getData() << " <-\n";
+        int controller = 0;
+        node* currentNode = getNode(edgess.front()->getOrigin()->getData());
+        cout << edgess.front()->getData() << " <-\n";
 
-      if (currentNode == nullptr) return nullptr;
+        if (currentNode == nullptr) return nullptr;
 
-      else {
-       /* while (controller != nodes.size()) {
-          
-          } */
+        else {
+            /* while (controller != nodes.size()) {
 
-        return newGraph;
+               } */
 
-      }
+            return newGraph;
 
-   }
+        }
+
+    }
 
 
     void MST_Kruskal();
-
-   /*  Graph* BFS(N orig)
+    Graph* BFS(N orig)
     {
         auto newGraph = new Graph;
 
@@ -261,16 +260,20 @@ public:
                     //cout << currentNode->getData() << ", ";
 
                     if(prevNode != currentNode)
+                    {
+                        //auto tempEdge = getEdge(prevNode->getData(),currentNode->getData());
                         newGraph->insertEdge(prevNode->getData(), currentNode->getData());
+                    }
+
 
                     visited.push_back(currentNode);
 
-                    for (ei = currentNode->edges.begin() ;  ei != currentNode->edges.end(); ei++)
+                    for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
                     {
                         destNodeVisited = 0;
                         for(auto it = visited.begin(); it != visited.end(); it++)
                         {
-                            if((*ei)->nodes[1] == *it)
+                            if((*ei)->getDest() == *it)
                             {
                                 destNodeVisited = true;
                                 break;
@@ -278,7 +281,7 @@ public:
                         }
                         if(!destNodeVisited)
                         {
-                            container.push((*ei)->nodes[1]);
+                            container.push((*ei)->getDest());
                         }
                     }
                 }
@@ -287,7 +290,7 @@ public:
         }
     }
 
-
+/*
     Graph* DFS(N orig)
     {
         auto newGraph = new Graph;
@@ -355,9 +358,9 @@ public:
     } */
 
     void print() {
-      for (auto ei : edgess) {
-        std::cout << ei->getOrigin()->getData() << " [" << ei->getData() << "] -> " << ei->getDest()->getData() << "\n";
-      }
+        for (auto ei : edgess) {
+            std::cout << ei->getOrigin()->getData() << " [" << ei->getData() << "] -> " << ei->getDest()->getData() << "\n";
+        }
     }
 
 
@@ -369,44 +372,44 @@ private:
     map<N,N> mapa;
 
     node *getNode(N name) {
-      auto *tmp = new node(name);
+        auto *tmp = new node(name);
 
-      if(nodes.size()>0) {
-        ni = std::find_if(nodes.begin(), nodes.end(), [&tmp](node* x) {return x->getData() == tmp->getData();});
-        if(ni != nodes.end())  return *ni;
+        if(nodes.size()>0) {
+            ni = std::find_if(nodes.begin(), nodes.end(), [&tmp](node* x) {return x->getData() == tmp->getData();});
+            if(ni != nodes.end())  return *ni;
+            else return nullptr;
+        }
+
         else return nullptr;
-       }
-      
-      else return nullptr;
     }
 
 
     edge *getEdge(N orig, N dest) {
 
-      edge* tmp = new edge(orig, dest);
-      
-      if(edgess.size() > 0) {
-        ei = std::find_if(edgess.begin(), edgess.end(), [&tmp](edge* x) {
-            return (x->getOrigin()->getData() == tmp->getOrigin()->getData()) && (x->getDest()->getData() == tmp->getDest()->getData());
+        edge* tmp = new edge(orig, dest);
+
+        if(edgess.size() > 0) {
+            ei = std::find_if(edgess.begin(), edgess.end(), [&tmp](edge* x) {
+                return (x->getOrigin()->getData() == tmp->getOrigin()->getData()) && (x->getDest()->getData() == tmp->getDest()->getData());
             });
-        if (ei != edgess.end()) return *ei;
+            if (ei != edgess.end()) return *ei;
+
+            else return nullptr;
+        }
 
         else return nullptr;
-      }
-
-      else return nullptr;
     }
 
 
     int getNumberEdges() {
-      return edgess.size();
+        return edgess.size();
     }
 
 
     void sort() {
-      if (edgess.size() > 0) {
-        edgess.sort([](edge* a, edge* b) {return a->getData() < b->getData();});
-       }
+        if (edgess.size() > 0) {
+            edgess.sort([](edge* a, edge* b) {return a->getData() < b->getData();});
+        }
     }
 };
 
