@@ -64,23 +64,23 @@ public:
       sort(Nodes, rindex + 1, right);
     }
 
-    void createDS(self){
+    void createDS(){
         for(auto ni : nodes){
             mapa.insert({ni->getData(),ni->getData() });
         }
 
-        for(ei = edgess.begin(); ei != edgess.edn(); ei++){
+        for(auto ei : edgess){
             dsJoin(mapa, ei->origin, ei->dest);
         }
     }
 
-    node* dsFind(map<N,N> &mapa, node* Nodo){
+    N dsFind(map<N,N> &mapa, node* Nodo){
         N nodo = Nodo->getData();
-        while(Nodo != mapa[Nodo]){
-            mapa[Nodo] = mapa[mapa[Nodo]];
-            Nodo = mapa[Nodo];
+        while(nodo != mapa[nodo]){
+            mapa[nodo] = mapa[mapa[nodo]];
+            nodo = mapa[nodo];
         }
-        return Nodo;
+        return nodo;
     }
 
 
@@ -89,15 +89,6 @@ public:
         N root2 = dsFind(mapa, n2);
         mapa[root2] = root1;
     }
-
-  /*  bool isConnected(){
-        bool result = false;
-        if(!mapa.empty()){
-            N val = mapa.begin()->second;
-            result = std::all_of(std::next(mapa.begin()),mapa.end(),[val](typename <insert map type>::const_reference t){return t->second == val;});
-        }
-        return result;
-    }*/
 
     bool insertNode(N name, double xAxis = 0, double yAxis = 0)
     {
@@ -210,7 +201,17 @@ public:
     }
 
     bool grade(node a);
-    bool connected();
+
+    bool connected(){
+        auto val = mapa.begin()->second;
+        for(auto it = mapa.begin();it != mapa.end();it++){
+            if(it->second != val){
+                return false;
+            }
+        }
+        return true;
+    }
+
     bool strongConnected();
     bool bipartite();
 
