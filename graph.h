@@ -49,20 +49,20 @@ public:
 
 
     void createDS(self){
-        for(auto ni : nodes){
-            mapa.insert({ni->getData(),ni->getData() });
-        }
+      for(auto ni : nodes){
+         mapa.insert({ni->getData(),ni->getData() });
+      }
+    }
 
 
     void createDS(){
-        for(auto ni : nodes){
+        for(auto ni : nodes) {
             mapa.insert({ni->getData(),ni->getData() });
         }
 
-        for(auto ei : edgess){
+        for(auto ei : edgess) {
             dsJoin(mapa, ei->origin, ei->dest);
         }
-        return Nodo;
     }
 
 
@@ -87,26 +87,14 @@ public:
       auto tempNode = getNode(name);
       
       if(tempNode) return false;
-      
+
       else {
         auto newNode = new node(name, xAxis, yAxis);
         nodes.push_back(newNode);
         return true;
       }
     }
-
-
-    bool insertNode(N name, double xAxis = 0, double yAxis = 0) {
-      auto tempNode = getNode(name);
-      
-      if(tempNode) return false;
-
-      else {
-            auto newNode = new node(name, xAxis, yAxis);
-            nodes.push_back(newNode);
-            return true;
-        }
-    }
+  
 
     bool insertEdge(N orig, N dest, E weight=0, bool direction=0) {
         auto firstNode = getNode(orig);
@@ -122,6 +110,7 @@ public:
           return true;
         }
     }
+
 
     bool removeNode(N name)
     {
@@ -154,6 +143,7 @@ public:
             return true;
         }
     }
+
 
     bool removeEdge(N orig, N dest)
     {
