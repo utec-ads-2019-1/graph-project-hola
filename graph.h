@@ -47,12 +47,6 @@ public:
         // TODO
     }
 
-    int nodes.size()
-    {
-        return nodes.nodes.size();
-    }
-
-
     void sort (vector<node*> &Nodes, int left, int right) {
       if (left >= right) return;
       int pivot = Nodes[left + (right - left)/2]->edges->getData();
