@@ -28,7 +28,7 @@ public:
     void setReached(bool Reached) {reached = Reached;}
 
 private:
-    N data;
+    N data = NULL;
     double x;
     double y;
     bool reached;
