@@ -384,15 +384,14 @@ private:
     EdgeIte ei;
     map<node*,node*> mapa; 
 
-    node *getNode(N name)
-    {
-      auto tmp = new node(name);
+    node *getNode(N name) {
+      auto *tmp = new node(name);
 
-          if(nodes.size()>0){
-            ni = std::find_if(nodes.begin(), nodes.end(), [&tmp](node& x) {return x.getData() == tmp->getData();});
-                return *ni;
-       
-  }}
+      if(nodes.size()>0) {
+        ni = std::find_if(nodes.begin(), nodes.end(), [&tmp](node* x) {return x->getData() == tmp->getData();});
+        return *ni;
+       }
+    }
 
  /*   edge *getEdge(N orig, N dest) {
       if (edges.size() > 0) {
