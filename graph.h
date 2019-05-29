@@ -64,6 +64,7 @@ public:
       sort(Nodes, rindex + 1, right);
     }
 
+
     void createDS(self){
         for(auto ni : nodes){
             mapa.insert({ni->getData(),ni->getData() });
@@ -73,6 +74,7 @@ public:
             dsJoin(mapa, ei->origin, ei->dest);
         }
     }
+
 
     node* dsFind(map<N,N> &mapa, node* Nodo){
         N nodo = Nodo->getData();
@@ -98,6 +100,7 @@ public:
         }
         return result;
     }*/
+    
 
     bool insertNode(N name, double xAxis = 0, double yAxis = 0)
     {
@@ -204,7 +207,7 @@ public:
     {
         float dens = 0.0f;
 
-        dens = (float)getNumberEdges()/(float)nodes.nodes.size()/(float)(nodes.nodes.size()-1) ;
+        dens = (float)getNumberEdges()/(float)nodes.size()/(float)(nodes.size()-1) ;
 
         return dens >= 0.6f;
     }
@@ -243,7 +246,7 @@ public:
 
     void MST_Kruskal();
 
-    Graph* BFS(N orig)
+   /*  Graph* BFS(N orig)
     {
         auto newGraph = new Graph;
 
@@ -263,7 +266,7 @@ public:
         else
         {
             container.push(currentNode);
-            while(container.nodes.size()>0)
+            while(container.size()>0)
             {
                 nodeVisited = false;
                 prevNode = currentNode;
@@ -373,19 +376,12 @@ public:
             }
             return newGraph;
         }
-    }
+    } */
 
-    void print()
-    {
-        for (ni = nodes.begin(); ni != nodes.end() ; ni++)
-        {
-            std::cout << (*ni)->getData() << " -> ";
-            for (ei = (*ni)->edges.begin() ;  ei != (*ni)->edges.end(); ei++)
-            {
-                std::cout << (*ei)->getData() << "|" << (*ei)->nodes[1]-> getData() << " -> ";
-            }
-            std::cout << std::endl;
-        }
+    void print() {
+      for (auto ei : edgess) {
+        std::cout << ei->getOrigin()->getData() << " [" << ei->getData() << "] -> " << ei->getDest()->getData() << "\n";
+      }
     }
 
 
@@ -398,7 +394,7 @@ private:
 
     node *getNode(N name) {
       auto *tmp = new node(name);
-
+      
       if(nodes.size()>0) {
         ni = std::find_if(nodes.begin(), nodes.end(), [&tmp](node* x) {return x->getData() == tmp->getData();});
         if(ni != nodes.end()){
@@ -410,25 +406,21 @@ private:
         return nullptr;
        }
     }
-
-  /*  edge *getEdge(N orig, N dest) {
-      if (edges.size() > 0) {
-        ei = std::find_if
+    
+    
+    edge *getEdge(N orig, N dest) {
+      auto *tmp = new edge(orig, dest);
+      if(edgess.size() > 0) {
+        ei = std::find_if(edgess.begin(), edgess.end(), [&tmp](edge* x) {
+            return (x->getOrigin()->getData() == tmp->getOrigin()->getData()) && (x->getDest()->getData() == tmp->getDest()->getData());
+            });
+        return *ei;
       }
     }
-*/
-    int getNumberEdges()
-    {
-        int count = 0;
-        if(nodes.size()>0)
-        {
-            for (ni = nodes.begin(); ni != nodes.end() ; ni++)
-            {
-                count = count + (*ni)->edges.nodes.size();
-            }
-            return count;
-        }
-        return 0;
+
+
+    int getNumberEdges() {
+      return edgess.size();
     }
 
 };

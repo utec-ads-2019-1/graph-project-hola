@@ -21,10 +21,7 @@ int main(int argc, char *argv[]) {
     graph1.insertNode('F');
     graph1.insertNode('G');
 
-    std::cout << graph1.findNode('A') << "\n";
-    std::cout << graph1.findNode('H') << "\n";
-  //  std::cout << graph1.isConnected() << "\n";
- /*   graph1.insertEdge('A', 'G', 13);
+    graph1.insertEdge('A', 'G', 13);
     graph1.insertEdge('A', 'D', 8);
     graph1.insertEdge('B', 'E', 52);
     graph1.insertEdge('B', 'C', 17);
@@ -43,7 +40,6 @@ int main(int argc, char *argv[]) {
     graph1.insertEdge('G', 'D', 17);
 
 
-    cout << "\nSize: " << graph1.size() << endl << endl;
     cout << "\nDensity: " << graph1.density() << endl << endl;
 
     graph1.print();
@@ -51,7 +47,7 @@ int main(int argc, char *argv[]) {
     auto prim = graph1.MST_Prim('A');
     prim->print();
     
-    cout << "\n\nBFS: \n" ;
+ /*   cout << "\n\nBFS: \n" ;
     auto bfs1 = graph1.BFS('B');
     bfs1->print();
 
