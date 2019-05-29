@@ -47,23 +47,6 @@ public:
         // TODO
     }
 
-    void sort (vector<node*> &Nodes, int left, int right) {
-      if (left >= right) return;
-      int pivot = Nodes[left + (right - left)/2]->edges->getData();
-      int lindex = left - 1;
-      int rindex = right + 1;
-
-      while(1) {
-        while(Nodes[++rindex]->edges->getData() < pivot);
-        while(Nodes[--rindex]->edges->getData() > pivot);
-        if(lindex >= rindex) break;
-        swap (Nodes[lindex], Nodes[rindex]);
-      }
-
-      sort(Nodes, left, rindex);
-      sort(Nodes, rindex + 1, right);
-    }
-
 
     void createDS(self){
         for(auto ni : nodes){
@@ -102,16 +85,12 @@ public:
     }*/
 
 
-    bool insertNode(N name, double xAxis = 0, double yAxis = 0)
-    {
-      auto tempNode = this->getNode(name);
-        if(tempNode != NULL)
-        {
-            if(tempNode->getData() == name)
-                return false;
-        }
-        else
-        {
+    bool insertNode(N name, double xAxis = 0, double yAxis = 0) {
+      auto tempNode = getNode(name);
+      
+      if(tempNode) return false;
+
+      else {
             auto newNode = new node(name, xAxis, yAxis);
             nodes.push_back(newNode);
             return true;
@@ -121,12 +100,13 @@ public:
     bool insertEdge(N orig, N dest, E weight=0, bool direction=0) {
         auto firstNode = getNode(orig);
         auto secondNode = getNode(dest);
-        if(firstNode == NULL || secondNode == NULL) return false;
+        
+        if(firstNode == nullptr || secondNode == nullptr) { return false;}
 
-        if(getEdge(orig, dest) != NULL) return false;
-
+        else if(getEdge(orig, dest) != nullptr) return false;
+  
         else {
-          auto newEdge = new edge(weight, firstNode, secondNode, direction);
+          edge* newEdge = new edge(weight, firstNode, secondNode, direction);
           edgess.push_back(newEdge);
           return true;
         }
@@ -193,7 +173,7 @@ public:
 
     bool findEdge(N orig, N dest)
     {
-        if(getEdge(orig, dest) == NULL) return false;
+        if(!getEdge(orig, dest)) return false;
         else return true;
     }
 
@@ -203,11 +183,11 @@ public:
         else return true;
     }
 
-    bool density()
-    {
-        float dens = 0.0f;
 
-        dens = (float)getNumberEdges()/(float)nodes.size()/(float)(nodes.size()-1) ;
+    bool density() {
+       float dens = 0.0f;
+
+        dens = (float)getNumberEdges()/((float)nodes.size()*(float)(nodes.size()-1)) ;
 
         return dens >= 0.6f;
     }
@@ -218,24 +198,19 @@ public:
     bool bipartite();
 
 
-    Graph* MST_Prim(N orig)
-    {
+    Graph* MST_Prim() {
       auto newGraph = new Graph;
-
-      for (ni = this->nodes.begin(); ni != this->nodes.end(); ni++)
-            newGraph->insertNode((*ni)->getData(), (*ni)->getX(), (*ni)->getY());
+      sort();
 
       int controller = 0;
-      auto currentNode = getNode(orig);
+      node* currentNode = getNode(edgess.front()->getOrigin()->getData());
 
-      if (currentNode == NULL)
-        return NULL;
+      if (currentNode == nullptr) return nullptr;
 
-      else
-      {
-        while (controller != nodes.size()) {
-
-          }
+      else {
+       /* while (controller != nodes.size()) {
+          
+          } */
 
         return newGraph;
 
@@ -397,32 +372,28 @@ private:
 
       if(nodes.size()>0) {
         ni = std::find_if(nodes.begin(), nodes.end(), [&tmp](node* x) {return x->getData() == tmp->getData();});
-        if(ni != nodes.end()){
-            return *ni;
-        }else{
-            return nullptr;
-        }
-       }else{
-        return nullptr;
+        if(ni != nodes.end())  return *ni;
+        else return nullptr;
        }
+      
+      else return nullptr;
     }
 
 
     edge *getEdge(N orig, N dest) {
 
+      edge* tmp = new edge(orig, dest);
+      
       if(edgess.size() > 0) {
-        auto origNode = getNode(orig);
-        auto destNode = getNode(dest);
-        if(origNode == NULL || destNode == NULL) return NULL;
+        ei = std::find_if(edgess.begin(), edgess.end(), [&tmp](edge* x) {
+            return (x->getOrigin()->getData() == tmp->getOrigin()->getData()) && (x->getDest()->getData() == tmp->getDest()->getData());
+            });
+        if (ei != edgess.end()) return *ei;
 
-        for (ei = (*ni)->edges.begin() ;  ei != (*ni)->edges.end(); ei++)
-        {
-          if((*ei)->getOrigin()->getData() == orig && (*ei)->getDest()->getData() == dest)
-              return *ei;
-        }
-
-        return *ei;
+        else return nullptr;
       }
+
+      else return nullptr;
     }
 
 
@@ -433,8 +404,8 @@ private:
 /*
     void sort() {
       if (edgess.size() > 0) {
-        edgess.sort([](edge* a, edgess* b) {return a->getData() < b->getData()});
-      }
+        edgess.sort([](edge* a, edge* b) {return a->getData() < b->getData();});
+       }
     }
 */
 };
