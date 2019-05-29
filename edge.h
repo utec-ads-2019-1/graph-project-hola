@@ -25,6 +25,7 @@ public:
     node* getOrigin(){return origin;}
     node* getDest(){return dest;}
 
+
     Edge (E orig, E dst) {
       node* eOrig = new node(orig);
       node* eDest = new node(dst);
