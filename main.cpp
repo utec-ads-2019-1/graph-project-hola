@@ -23,20 +23,12 @@ int main(int argc, char *argv[]) {
 
     graph1.insertEdge('A', 'B', 5);
     graph1.insertEdge('B', 'C', 8);
-    graph1.insertEdge('B', 'A', 5);
-    graph1.insertEdge('C', 'D', 2);
     graph1.insertEdge('C', 'F', 20);
-    graph1.insertEdge('C', 'B', 8);
     graph1.insertEdge('D', 'C', 2);
-    graph1.insertEdge('D', 'F', 9);
-    graph1.insertEdge('D', 'E', 3);
     graph1.insertEdge('E', 'D', 3);
-    graph1.insertEdge('E', 'G', 10);
-    graph1.insertEdge('F', 'C', 20);
     graph1.insertEdge('F', 'D', 9);
     graph1.insertEdge('F', 'G', 50);
-    graph1.insertEdge('G', 'F', 50);
-    graph1.insertEdge('G', 'E', 10);
+    graph1.insertEdge('G', 'E', 50);
 
 
     std::cout<<"Es conexo: "<<graph1.connected()<<"\n";

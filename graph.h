@@ -203,10 +203,12 @@ public:
 
         for(auto ni : nodes) {
           //cout << "min->" << ni->getMinEdge()->getDest()->getData() << "\n";
-          auto aux = ni->getMinEdge()->getOrigin();
-          newGraph->insertNode(aux->getData(), aux->getX(), aux->getY(), 1);
-          cout << aux->getData() << "->" <<  ni->getMinEdge()->getDest()->getData() << "[" <<  ni->getMinEdge()->getData() << "] " <<  ni->getMinEdge()->getDir() << "\n";
-          newGraph->insertEdge(aux->getData(), ni->getMinEdge()->getDest()->getData(), ni->getMinEdge()->getData(), ni->getMinEdge()->getDir());
+          auto o = ni->getMinEdge()->getOrigin();
+          auto d = ni->getMinEdge()->getDest();
+    
+          newGraph->insertNode(o->getData(), o->getX(), o->getY(), 1);
+          cout << o->getData() << "->" <<  d->getData() << "[" <<  ni->getMinEdge()->getData() << "] " << "\n";
+          //newGraph->insertEdge(o->getData(), d->getData(), ni->getMinEdge()->getData(), ni->getMinEdge()->getDir());
           ni->setReached(1);
         }
 

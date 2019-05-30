@@ -39,8 +39,21 @@ public:
 
     edge* getMinEdge() {
       nodeEdges.sort([](edge* a, edge* b) {return a->getData() < b->getData();});
-
-      if (nodeEdges.front()->getDest()->getReached()) return *std::next(nodeEdges.begin());
+      
+      auto current = *nodeEdges.begin();
+      
+      if (nodeEdges.front()->getDest()->getReached()) {
+        if (nodeEdges.size() == 1) {
+          edge* nuevo = new edge(current->getData(), current->getDest(), current->getOrigin(), current->getDir());
+          return nuevo;
+        }
+        
+        while(current->getDest()->getReached() && current != *nodeEdges.end()) {
+          current = *std::next(nodeEdges.begin());
+        }
+        return current;
+      }
+      
       else return *nodeEdges.begin();
     }
 
