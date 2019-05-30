@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 
     graph1.print();
 
-    std::cout<<"KRUSKAL"<<"\n\n";
+    std::cout<<"\n\nKRUSKAL"<<"\n";
 
     graph* kruskal = graph1.MST_Kruskal();
     
