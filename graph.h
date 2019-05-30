@@ -175,7 +175,18 @@ public:
        return dens >= 0.6f;
     }
 
-    bool grade(node a);
+    int grade(node* currNode) {
+        int temp;
+        for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
+        {
+            if( (*ei)->getOrigin() == currNode || (*ei)->getDest() == currNode ())
+            {
+                temp++;
+            }
+        }
+        return temp;
+    }
+
 
     bool connected(){
         bool flag = true;
