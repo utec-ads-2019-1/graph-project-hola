@@ -47,25 +47,6 @@ public:
         // TODO
     }
 
-
-    void createDS(self){
-      for(auto ni : nodes){
-         mapa.insert({ni->getData(),ni->getData() });
-      }
-    }
-
-
-    void createDS(){
-        for(auto ni : nodes) {
-            mapa.insert({ni->getData(),ni->getData() });
-        }
-
-        for(auto ei : edgess) {
-            dsJoin(mapa, ei->origin, ei->dest);
-        }
-    }
-
-
     N dsFind(map<N,N> &mapa, N Nodo){
         while(Nodo != mapa[Nodo]){
             mapa[Nodo] = mapa[mapa[Nodo]];
@@ -231,7 +212,7 @@ public:
 
    }
 
-/*
+
     Graph* MST_Kruskal(){
         auto newGraph = new Graph;
 
@@ -239,18 +220,17 @@ public:
         for(auto ni : nodes){
             newGraph->insertNode(ni->getData(), ni->getX(),ni->getY());
         }
-
         for(auto ei : edgess){
-            node* o = ei->getOrigin();
-            node* d = ei->getDest();
-            if(dsFind(mapa,o) != dsFind(mapa,d)){
+            N o = ei->getOrigin()->getData();
+            N d = ei->getDest()->getData();
+            if(dsFind(newGraph,o) != dsFind(mapa,d)){
                 std::cout<<"ENTRO \n";
                 newGraph->insertEdge(o->getData(),d->getData(),ei->getData(), ei->getDir());
             }
         }
         std::cout<<"HOLA PELADA"<<"\n";
         return newGraph;
-    }    */
+    }    
 
    /*  Graph* BFS(N orig)
     {
