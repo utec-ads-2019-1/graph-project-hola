@@ -46,8 +46,7 @@ int main(int argc, char *argv[]) {
     graph1.insertNode('B');
 
     graph1.insertEdge('A','B',5);
-////////////////////////////////////
-//TEST DE BIPARTITO
+    //TEST DE BIPARTITO
 
 
     std::cout<<"Es conexo: "<<graph1.connected()<<"\n";
