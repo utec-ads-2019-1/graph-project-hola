@@ -89,7 +89,6 @@ int main(int argc, char *argv[]) {
 
     bool a = graph1.StronglyConnected();
     cout << a;
-    return EXIT_SUCCESS;
     
     std::cout<<"\n\nKRUSKAL"<<"\n";
 
@@ -100,4 +99,6 @@ int main(int argc, char *argv[]) {
     std::cout<<"\n\nPPRIM\n";
     graph* prim = graph1.MST_Prim();
     prim->print();
+   
+    return EXIT_SUCCESS;
 }
