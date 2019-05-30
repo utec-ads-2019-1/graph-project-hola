@@ -50,9 +50,10 @@ int main(int argc, char *argv[]) {
     graph* kruskal = graph1.MST_Kruskal();
     
     kruskal->print();
-
-    // auto prim = graph1.MST_Prim();
-    // prim->print();
+    
+    std::cout<<"\n\nPPRIM\n";
+    graph* prim = graph1.MST_Prim();
+    prim->print();
     
  /*   cout << "\n\nBFS: \n" ;
     auto bfs1 = graph1.BFS('B');
