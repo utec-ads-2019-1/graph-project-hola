@@ -107,6 +107,8 @@ public:
         else {
           edge* newEdge = new edge(weight, firstNode, secondNode, direction);
           edgess.push_back(newEdge);
+          firstNode->addEdge(newEdge);
+          cout << firstNode->getData();
           return true;
         }
     }
@@ -172,25 +174,24 @@ public:
     }
 
 
-    bool findEdge(N orig, N dest)
-    {
-        if(!getEdge(orig, dest)) return false;
-        else return true;
+    bool findEdge(N orig, N dest) {
+      if(!getEdge(orig, dest)) return false;
+      else return true;
     }
 
-    bool findNode(N name)
-    {
-        if(!getNode(name)) return false;
-        else return true;
+
+    bool findNode(N name) {
+      if(!getNode(name)) return false;
+      else return true;
     }
 
 
     bool density() {
-       float dens = 0.0f;
+      float dens = 0.0f;
 
-        dens = (float)getNumberEdges()/((float)nodes.size()*(float)(nodes.size()-1)) ;
+       dens = (float)getNumberEdges()/((float)nodes.size()*(float)(nodes.size()-1)) ;
 
-        return dens >= 0.6f;
+       return dens >= 0.6f;
     }
 
     bool grade(node a);
@@ -220,9 +221,10 @@ public:
       if (currentNode == nullptr) return nullptr;
 
       else {
-       /* while (controller != nodes.size()) {
-          
-          } */
+        for(auto ni : nodes) {
+          cout << "prim\n";
+          cout << ni->getMinEdge();
+        }
 
         return newGraph;
 

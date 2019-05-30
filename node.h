@@ -1,6 +1,10 @@
 #ifndef NODE_H
 #define NODE_H
 
+#include "edge.h"
+#include <algorithm>
+#include <list>
+
 template <typename G>
 class Node {
 public:
@@ -8,12 +12,13 @@ public:
     typedef typename G::E E;
     typedef typename G::edge edge;
     typedef typename G::EdgeSeq EdgeSeq;
+    typedef std::list<edge*> Seq;
 
     EdgeSeq edges;
 
     Node(){}
-    Node(N value){data = value; x = y = reached = 0;}
-    Node(N value, double xAxis, double yAxis){data = value; x= xAxis; y = yAxis, reached = 0;}
+    Node(N value){data = value; x = y = 0;}
+    Node(N value, double xAxis, double yAxis){data = value; x= xAxis; y = yAxis;}
 
     N getData() {return data;}
     void setData(N newData) {data = newData;}
@@ -23,15 +28,21 @@ public:
 
     double getY(){return y;}
     void setY(double Y){y = Y;}
+    
+    void addEdge(edge* ed) {
+      edges.push_back(ed);
+    }
 
-    bool getReached() {return reached;}
-    void setReached(bool Reached) {reached = Reached;}
+    edge* getMinEdge() {
+      nodeEdges.sort([](edge* a, edge* b) {return a->getData() < b->getData();});
+      return *nodeEdges.begin();
+    }
 
 private:
     N data = NULL;
     double x;
     double y;
-    bool reached;
+    Seq nodeEdges;
 };
 
 #endif
