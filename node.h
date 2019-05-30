@@ -57,6 +57,14 @@ public:
       else return *nodeEdges.begin();
     }
 
+    std::vector<char> adjacentNodes(){
+        std::vector<char> adj;
+        for(auto ei : nodeEdges){
+            adj.push_back(ei->getData());
+        }
+        return adj;
+    }
+
 private:
     N data = NULL;
     double x;
