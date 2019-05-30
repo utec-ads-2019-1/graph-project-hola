@@ -304,10 +304,8 @@ public:
         bool nodeVisited, destNodeVisited;
 
         stack<node *> container;
-        list<node *> visited;
 
         auto currentNode = getNode(orig);
-        auto prevNode = currentNode;
 
         if(currentNode == NULL)
             return NULL;
@@ -319,29 +317,9 @@ public:
                 currentNode = container.top();
                 container.pop();
 
-                for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
-                {
-                    if( (*ei)->getDest() == currentNode && ((*ei)->getOrigin()->getReached()))
-                    {
-                        prevNode = (*ei)->getOrigin();
-                        break;
-                    }
-                }
-
-                if(prevNode == NULL)
-                    prevNode = currentNode;
-
 
                 if(!currentNode->getReached())
                 {
-                    //cout << currentNode->getData() << ", ";
-
-                    if(prevNode != currentNode)
-                    {
-                        auto tempEdge = getEdge(prevNode->getData(),currentNode->getData());
-                        newGraph->insertEdge(prevNode->getData(), currentNode->getData(), tempEdge->getData());
-                    }
-
                     currentNode->setReached(1);
 
                     for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
@@ -352,6 +330,13 @@ public:
                             break;
                         }
                     }
+
+                    if(!container.empty())
+                    {
+                        auto tempEdge = getEdge(currentNode->getData(),container.top()->getData());
+                        newGraph->insertEdge(tempEdge->getOrigin()->getData(), tempEdge->getDest()->getData(), tempEdge->getData());
+                    }
+
                 }
             }
             return newGraph;
