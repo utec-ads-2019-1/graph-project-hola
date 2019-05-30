@@ -11,8 +11,6 @@ public:
     typedef typename G::node node;
     node* origin;
     node* dest;
-    node* origin;
-    node* dest;
 
     Edge(){data = 0; dir = false; origin = nullptr, dest = nullptr;}
     Edge(E value, node* orig, node* dst, bool direction) {data = value; origin = orig; dest = dst; dir = direction;}
