@@ -192,9 +192,42 @@ public:
         return dens >= 0.6f;
     }
 
-    bool grade(node a);
-    bool connected();
-    bool strongConnected();
+    int grade(node* currNode)
+    {
+        int temp;
+        for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
+        {
+            if( (*ei)->getOrigin() == currNode || (*ei)->getDest() == currNode ())
+            {
+                temp++;
+            }
+        }
+        return temp;
+    }
+    bool connected()
+    {
+        bool flag = true;
+
+        for(ni = nodes.begin(); ni != nodes.end(); ni++)
+        {
+            for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
+            {
+                if( (*ei)->getOrigin() == (*ni) || (*ei)->getDest() == (*ni) )
+                {
+                    flag = true;
+                    break;
+                }
+                else
+                {
+                    flag = false;
+                }
+            }
+            if(!flag)
+                break;
+        }
+        return flag;
+
+    }
     bool bipartite();
 
 
@@ -324,10 +357,21 @@ public:
 
                     for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
                     {
-                        if( (*ei)->getOrigin() == currentNode && (!(*ei)->getDest()->getReached()))
+                        if (!(*ei)->getDir())
                         {
-                            container.push((*ei)->getDest());
-                            break;
+                            if( (*ei)->getOrigin() == currentNode && (!(*ei)->getDest()->getReached()))
+                            {
+                                container.push((*ei)->getDest());
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            if( (*ei)->getDest() == currentNode && (!(*ei)->getOrigin()->getReached()))
+                            {
+                                container.push((*ei)->getDest());
+                                break;
+                            }
                         }
                     }
 
@@ -343,9 +387,23 @@ public:
         }
     }
 
+
+    Graph* StronglyConnected()
+    {
+        auto tempGraph = DFS('B');
+        tempGraph->transpose();
+        return tempGraph;
+    }
+
+
     void print() {
         for (auto ei : edgess) {
-            std::cout << ei->getOrigin()->getData() << " [" << ei->getData() << "] -> " << ei->getDest()->getData() << "\n";
+
+            if(!ei->getDir())
+                std::cout << ei->getOrigin()->getData() << " [" << ei->getData() << "] -> " << ei->getDest()->getData() << "\n";
+            else
+                std::cout << ei->getDest()->getData() << " [" << ei->getData() << "] -> " << ei->getOrigin()->getData() << "\n";
+
         }
     }
 
@@ -397,6 +455,13 @@ private:
             edgess.sort([](edge* a, edge* b) {return a->getData() < b->getData();});
         }
     }
+
+    void transpose()
+    {
+        for (ei = edgess.begin() ;  ei != edgess.end(); ++ei)
+            (*ei)->setDir(1);
+    }
+
 };
 
 typedef Graph<Traits> graph;
