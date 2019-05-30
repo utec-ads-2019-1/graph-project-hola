@@ -224,10 +224,8 @@ public:
         for(auto ei : edgess){
             N o = ei->getOrigin()->getData();
             N d = ei->getDest()->getData();
-            if(newGraph->dsFind(o) != newGraph->dsFind(d)){
-                std::cout<<"ENTRO \n";
+            if(newGraph->dsFind(o) != newGraph->dsFind(d))
                 newGraph->insertEdge(o,d,ei->getData(), ei->getDir());
-            }
         }
         return newGraph;
     }    
