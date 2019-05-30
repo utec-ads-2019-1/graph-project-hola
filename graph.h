@@ -196,18 +196,15 @@ public:
         color.insert({firstNode->getData(),'R'});
         while(!q.empty()){
             node* current = q.front();
-            vector<char> adj = current->adjacentNodes(); 
+            vector<char> adj = current->adjacentNodes();
             if(color[current->getData()] == 'R'){
                 for(int i = 0;i<adj.size();i++){
                     if(color[adj[i]] == 'R'){
                         return false;
                     }
                     color[adj[i]] = 'B';
-                    if(color[adj[i]] == 0){
-                        q.push(getNode(adj[i]));
-                    }
+                    q.push(getNode(adj[i]));
                 }
-
             }
             if(color[current->getData()] == 'B'){
                 for(int i = 0;i<adj.size();i++){
@@ -215,9 +212,7 @@ public:
                         return false;
                     }
                     color[adj[i]] = 'R';
-                    if(color[adj[i]] == 0){
-                        q.push(getNode(adj[i]));
-                    }
+                    q.push(getNode(adj[i]));
                 }                
             }
         q.pop();
