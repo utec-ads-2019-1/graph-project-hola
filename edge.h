@@ -11,6 +11,8 @@ public:
     typedef typename G::node node;
     node* origin;
     node* dest;
+    node* origin;
+    node* dest;
 
     Edge(){data = 0; dir = false; origin = nullptr, dest = nullptr;}
     Edge(E value, node* orig, node* dst, bool direction) {data = value; origin = orig; dest = dst; dir = direction;}
@@ -20,19 +22,23 @@ public:
 
     E getData() {return data;}
     void setData(E newData) {data = newData;}
+  
     bool getDir() { return dir;}
     void setDir(bool newDir) { dir = newDir;}
+    
     node* getOrigin(){return origin;}
+    
     node* getDest(){return dest;}
 
+
     Edge (E orig, E dst) {
-        node* eOrig = new node(orig);
-        node* eDest = new node(dst);
-
-        origin = eOrig;
-        dest = eDest;
+      node* eOrig = new node(orig);
+      node* eDest = new node(dst);
+      
+      origin = eOrig;
+      dest = eDest;
     }
-
+  
 private:
     E data;
     bool dir;

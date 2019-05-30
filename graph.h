@@ -48,19 +48,7 @@ public:
     }
 
 
-    void createDS(self){
-        for(auto ni : nodes){
-            mapa.insert({ni->getData(),ni->getData() });
-        }
-
-        for(ei = edgess.begin(); ei != edgess.edn(); ei++){
-            dsJoin(mapa, ei->origin, ei->dest);
-        }
-    }
-
-
-    node* dsFind(map<N,N> &mapa, node* Nodo){
-        N nodo = Nodo->getData();
+    N dsFind(N Nodo){
         while(Nodo != mapa[Nodo]){
             mapa[Nodo] = mapa[mapa[Nodo]];
             Nodo = mapa[Nodo];
@@ -69,51 +57,46 @@ public:
     }
 
 
-    void dsJoin(map<N,N> &mapa, node* n1, node* n2){
-        N root1 = dsFind(mapa, n1);
-        N root2 = dsFind(mapa, n2);
+    void dsJoin(N n1, N n2){
+        N root1 = dsFind(n1);
+        N root2 = dsFind(n2);
         mapa[root2] = root1;
     }
 
-    /*  bool isConnected(){
-          bool result = false;
-          if(!mapa.empty()){
-              N val = mapa.begin()->second;
-              result = std::all_of(std::next(mapa.begin()),mapa.end(),[val](typename <insert map type>::const_reference t){return t->second == val;});
-          }
-          return result;
-      }*/
 
+    bool insertNode(N name, double xAxis = 0, double yAxis = 0, bool reached = 0) {
+      auto tempNode = getNode(name);
+      
+      if(tempNode) return false;
 
-    bool insertNode(N name, double xAxis = 0, double yAxis = 0) {
-        auto tempNode = getNode(name);
-
-        if(tempNode) return false;
-
-        else {
-            auto newNode = new node(name, xAxis, yAxis);
-            nodes.push_back(newNode);
-            return true;
-        }
+      else {
+        auto newNode = new node(name, xAxis, yAxis, reached);;
+        nodes.push_back(newNode);
+        mapa.insert({name,name});
+        return true;
+      }
     }
+  
 
     bool insertEdge(N orig, N dest, E weight=0, bool direction=0) {
         auto firstNode = getNode(orig);
         auto secondNode = getNode(dest);
-
+        
         if(firstNode == nullptr || secondNode == nullptr) { return false;}
 
         else if(getEdge(orig, dest) != nullptr) return false;
-
+  
         else {
-            edge* newEdge = new edge(weight, firstNode, secondNode, direction);
-            edgess.push_back(newEdge);
-            return true;
+          edge* newEdge = new edge(weight, firstNode, secondNode, direction);
+          edgess.push_back(newEdge);
+          firstNode->addEdge(newEdge);
+          dsJoin(orig, dest);
+          return true;
         }
     }
 
-    bool removeNode(N name)
-    {
+
+    bool removeNode(N name) {
         bool flag = false;
         NodeIte tempIte;
 
@@ -144,6 +127,7 @@ public:
         }
     }
 
+
     bool removeEdge(N orig, N dest)
     {
         bool flag = false;
@@ -171,126 +155,147 @@ public:
     }
 
 
-    bool findEdge(N orig, N dest)
-    {
-        if(!getEdge(orig, dest)) return false;
-        else return true;
+    bool findEdge(N orig, N dest) {
+      if(!getEdge(orig, dest)) return false;
+      else return true;
     }
 
-    bool findNode(N name)
-    {
-        if(!getNode(name)) return false;
-        else return true;
+
+    bool findNode(N name) {
+      if(!getNode(name)) return false;
+      else return true;
     }
 
 
     bool density() {
-        float dens = 0.0f;
+      float dens = 0.0f;
 
-        dens = (float)getNumberEdges()/((float)nodes.size()*(float)(nodes.size()-1)) ;
-
-        return dens >= 0.6f;
+       dens = (float)getNumberEdges()/((float)nodes.size()*(float)(nodes.size()-1)) ;
+       
+       return dens >= 0.6f;
     }
 
-    int grade(node* currNode)
-    {
-        int temp;
-        for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
-        {
-            if( (*ei)->getOrigin() == currNode || (*ei)->getDest() == currNode ())
-            {
-                temp++;
+    bool grade(node a);
+
+    bool connected(){
+        auto val = mapa.begin()->second;
+        for(auto it = mapa.begin();it != mapa.end();it++){
+            if(it->second != val){
+                return false;
             }
         }
-        return temp;
+        return true;
     }
-    bool connected()
-    {
-        bool flag = true;
-
-        for(ni = nodes.begin(); ni != nodes.end(); ni++)
-        {
-            for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
-            {
-                if( (*ei)->getOrigin() == (*ni) || (*ei)->getDest() == (*ni) )
-                {
-                    flag = true;
-                    break;
-                }
-                else
-                {
-                    flag = false;
+    
+    
+    bool bipartite(){
+        map<char,char> color;
+        queue<node*> q;
+        auto firstNode = *(nodes.begin());
+        q.push(firstNode);
+        color.insert({firstNode->getData(),'R'});
+        while(!q.empty()){
+            node* current = q.front();
+            vector<char> adj = current->adjacentNodes();
+            if(color[current->getData()] == 'R'){
+                for(int i = 0;i<adj.size();i++){
+                    if(color[adj[i]] == 'R'){
+                        return false;
+                    }
+                    color[adj[i]] = 'B';
+                    q.push(getNode(adj[i]));
                 }
             }
-            if(!flag)
-                break;
+            if(color[current->getData()] == 'B'){
+                for(int i = 0;i<adj.size();i++){
+                    if(color[adj[i]] = 'B'){
+                        return false;
+                    }
+                    color[adj[i]] = 'R';
+                    q.push(getNode(adj[i]));
+                }                
+            }
+        q.pop();
         }
-        return flag;
-
-    }
-    bool bipartite();
+        return true;
+    }   
 
 
     Graph* MST_Prim() {
-        auto newGraph = new Graph;
-        sort();
+      if (!connected()) return nullptr;
+      auto newGraph = new Graph;
+      sort();
 
-        int controller = 0;
-        node* currentNode = getNode(edgess.front()->getOrigin()->getData());
-        cout << edgess.front()->getData() << " <-\n";
+      node* currentNode = getNode(edgess.front()->getOrigin()->getData());
 
-        if (currentNode == nullptr) return nullptr;
+      if (currentNode == nullptr) return nullptr;
 
-        else {
-            /* while (controller != nodes.size()) {
+      else {
 
-               } */
+        for(auto ni : nodes) {
+          //cout << "min->" << ni->getMinEdge()->getDest()->getData() << "\n";
+          auto o = ni->getMinEdge()->getOrigin();
+          auto d = ni->getMinEdge()->getDest();
+    
+          newGraph->insertNode(o->getData(), o->getX(), o->getY(), 1);
+          cout << o->getData() << "->" <<  d->getData() << "[" <<  ni->getMinEdge()->getData() << "] " << "\n";
+          newGraph->insertEdge(o->getData(), d->getData(), ni->getMinEdge()->getData(), ni->getMinEdge()->getDir());
+          ni->setReached(1);
+        }
 
-            return newGraph;
+           return newGraph;
 
         }
 
     }
 
 
-    void MST_Kruskal();
-
-
-    Graph* BFS(N orig)
-    {
+    Graph* MST_Kruskal(){
         auto newGraph = new Graph;
 
-        for (ni = this->nodes.begin(); ni != this->nodes.end(); ni++)
-        {
-            newGraph->insertNode((*ni)->getData(), (*ni)->getX(), (*ni)->getY());
-            (*ni)->setReached(0);
+        sort();
+        for(auto ni : nodes){
+            newGraph->insertNode(ni->getData(), ni->getX(),ni->getY());
         }
+        for(auto ei : edgess){
+            N o = ei->getOrigin()->getData();
+            N d = ei->getDest()->getData();
+            if(newGraph->dsFind(o) != newGraph->dsFind(d))
+                newGraph->insertEdge(o,d,ei->getData(), ei->getDir());
+        }
+        return newGraph;
+    }    
 
-        queue<node *> container;
 
-        auto currentNode = getNode(orig);
-        auto prevNode = currentNode;
-        int a = 0;
+    Graph* BFS(N orig) {
+      auto newGraph = new Graph;
 
-        if(currentNode == NULL)
-            return NULL;
-        else
-        {
-            container.push(currentNode);
-            while(container.size()>0)
-            {
-                //prevNode = currentNode;
-                currentNode = container.front();
-                container.pop();
+      for (ni = this->nodes.begin(); ni != this->nodes.end(); ni++) {
+        newGraph->insertNode((*ni)->getData(), (*ni)->getX(), (*ni)->getY());
+        (*ni)->setReached(0);
+      }
 
-                for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
-                {
-                    if( (*ei)->getDest() == currentNode && ((*ei)->getOrigin()->getReached()))
-                    {
-                        prevNode = (*ei)->getOrigin();
-                        break;
-                    }
-                }
+      queue<node *> container;
+
+      auto currentNode = getNode(orig);
+      auto prevNode = currentNode;
+
+      if(currentNode == NULL) return NULL;
+       
+      else {
+        container.push(currentNode);
+        
+        while(container.size()>0) {
+        //prevNode = currentNode;
+        currentNode = container.front();
+        container.pop();
+
+        for (ei = edgess.begin() ;  ei != edgess.end(); ei++) {
+          if( (*ei)->getDest() == currentNode && ((*ei)->getOrigin()->getReached())) {
+            prevNode = (*ei)->getOrigin();
+            break;
+          }
+        }
 
                 if(prevNode == NULL)
                     prevNode = currentNode;
@@ -320,12 +325,12 @@ public:
             }
             return newGraph;
         }
+
     }
 
 
-    Graph* DFS(N orig)
-    {
-        auto newGraph = new Graph;
+    Graph* DFS(N orig){
+         auto newGraph = new Graph;
 
         for (ni = this->nodes.begin(); ni != this->nodes.end(); ni++)
         {
@@ -349,7 +354,6 @@ public:
             {
                 currentNode = container.top();
                 container.pop();
-
 
                 if(!currentNode->getReached())
                 {
@@ -389,8 +393,6 @@ public:
                                 auto tempEdge = getEdgeDir(currentNode->getData(),container.top()->getData());
                                 newGraph->insertEdge(tempEdge->getOrigin()->getData(), tempEdge->getDest()->getData(), tempEdge->getData());
                             }
-
-
 
                         }
 
