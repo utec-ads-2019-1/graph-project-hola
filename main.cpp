@@ -44,18 +44,13 @@ int main(int argc, char *argv[]) {
 ////////////////////////////////////
     graph1.insertNode('A');
     graph1.insertNode('B');
-    graph1.insertNode('C');
 
     graph1.insertEdge('A','B',5);
-    graph1.insertEdge('A','C',6);
-    graph1.insertEdge('C','B',3);
-    // graph1.insertEdge('B','A',5);
-
     //TEST DE BIPARTITO
 
 
     std::cout<<"Es conexo: "<<graph1.connected()<<"\n";
-    // std::cout<<"Es bipartito: "<<graph1.bipartite()<<"\n";
+    std::cout<<"Es bipartito: "<<graph1.bipartite()<<"\n";
 
     cout << "\nDensity: " << graph1.density() << endl << endl;
 
