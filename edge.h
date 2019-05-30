@@ -21,9 +21,12 @@ public:
 
     E getData() {return data;}
     void setData(E newData) {data = newData;}
+  
     bool getDir() { return dir;}
     void setDir(bool newDir) { dir = newDir;}
+    
     node* getOrigin(){return origin;}
+    
     node* getDest(){return dest;}
 
 
