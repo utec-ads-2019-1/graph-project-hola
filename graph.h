@@ -66,17 +66,16 @@ public:
     }
 
 
-    N dsFind(map<N,N> &mapa, node* Nodo){
-        N nodo = Nodo->getData();
-        while(nodo != mapa[nodo]){
-            mapa[nodo] = mapa[mapa[nodo]];
-            nodo = mapa[nodo];
+    N dsFind(map<N,N> &mapa, N Nodo){
+        while(Nodo != mapa[Nodo]){
+            mapa[Nodo] = mapa[mapa[Nodo]];
+            Nodo = mapa[Nodo];
         }
-        return nodo;
+        return Nodo;
     }
 
 
-    void dsJoin(map<N,N> &mapa, node* n1, node* n2){
+    void dsJoin(map<N,N> &mapa, N n1, N n2){
         N root1 = dsFind(mapa, n1);
         N root2 = dsFind(mapa, n2);
         mapa[root2] = root1;
@@ -91,6 +90,7 @@ public:
       else {
         auto newNode = new node(name, xAxis, yAxis);
         nodes.push_back(newNode);
+        mapa.insert({name,name});
         return true;
       }
     }
@@ -107,6 +107,7 @@ public:
         else {
           edge* newEdge = new edge(weight, firstNode, secondNode, direction);
           edgess.push_back(newEdge);
+          dsJoin(mapa, orig, dest);
           return true;
         }
     }
@@ -230,8 +231,26 @@ public:
 
    }
 
+/*
+    Graph* MST_Kruskal(){
+        auto newGraph = new Graph;
 
-    void MST_Kruskal();
+        sort();
+        for(auto ni : nodes){
+            newGraph->insertNode(ni->getData(), ni->getX(),ni->getY());
+        }
+
+        for(auto ei : edgess){
+            node* o = ei->getOrigin();
+            node* d = ei->getDest();
+            if(dsFind(mapa,o) != dsFind(mapa,d)){
+                std::cout<<"ENTRO \n";
+                newGraph->insertEdge(o->getData(),d->getData(),ei->getData(), ei->getDir());
+            }
+        }
+        std::cout<<"HOLA PELADA"<<"\n";
+        return newGraph;
+    }    */
 
    /*  Graph* BFS(N orig)
     {
