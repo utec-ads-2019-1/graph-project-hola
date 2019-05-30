@@ -289,13 +289,17 @@ public:
         }
     }
 
-/*
+
     Graph* DFS(N orig)
     {
         auto newGraph = new Graph;
 
         for (ni = this->nodes.begin(); ni != this->nodes.end(); ni++)
+        {
             newGraph->insertNode((*ni)->getData(), (*ni)->getX(), (*ni)->getY());
+            (*ni)->setReached(0);
+        }
+
 
         bool nodeVisited, destNodeVisited;
 
@@ -310,51 +314,49 @@ public:
         else
         {
             container.push(currentNode);
-            while(container.nodes.size()>0)
+            while(container.size()>0)
             {
-                nodeVisited = false;
-                prevNode = currentNode;
                 currentNode = container.top();
                 container.pop();
-                for (auto it = visited.begin(); it != visited.end() ; it++)
+
+                for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
                 {
-                    if(*it == currentNode)
+                    if( (*ei)->getDest() == currentNode && ((*ei)->getOrigin()->getReached()))
                     {
-                        nodeVisited = true;
+                        prevNode = (*ei)->getOrigin();
                         break;
                     }
                 }
-                if(!nodeVisited)
+
+                if(prevNode == NULL)
+                    prevNode = currentNode;
+
+
+                if(!currentNode->getReached())
                 {
                     //cout << currentNode->getData() << ", ";
 
                     if(prevNode != currentNode)
-                        newGraph->insertEdge(prevNode->getData(), currentNode->getData());
-
-
-                    visited.push_back(currentNode);
-
-                    for (ei = currentNode->edges.begin() ;  ei != currentNode->edges.end(); ei++)
                     {
-                        destNodeVisited = 0;
-                        for(auto it = visited.begin(); it != visited.end(); it++)
+                        auto tempEdge = getEdge(prevNode->getData(),currentNode->getData());
+                        newGraph->insertEdge(prevNode->getData(), currentNode->getData(), tempEdge->getData());
+                    }
+
+                    currentNode->setReached(1);
+
+                    for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
+                    {
+                        if( (*ei)->getOrigin() == currentNode && (!(*ei)->getDest()->getReached()))
                         {
-                            if((*ei)->nodes[1] == *it)
-                            {
-                                destNodeVisited = true;
-                                break;
-                            }
-                        }
-                        if(!destNodeVisited)
-                        {
-                            container.push((*ei)->nodes[1]);
+                            container.push((*ei)->getDest());
+                            break;
                         }
                     }
                 }
             }
             return newGraph;
         }
-    } */
+    }
 
     void print() {
         for (auto ei : edgess) {

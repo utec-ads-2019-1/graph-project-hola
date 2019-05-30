@@ -22,6 +22,7 @@ int main(int argc, char *argv[]) {
     graph1.insertNode('G');
 
     graph1.insertEdge('A', 'G', 13);
+    graph1.insertEdge('A', 'G', 13);
     graph1.insertEdge('A', 'D', 8);
     graph1.insertEdge('B', 'E', 52);
     graph1.insertEdge('B', 'C', 17);
@@ -39,20 +40,22 @@ int main(int argc, char *argv[]) {
     graph1.insertEdge('F', 'B', 8);
     graph1.insertEdge('G', 'D', 17);
 
+
     cout << "\nDensity: " << graph1.density() << endl << endl;
 
     graph1.print();
 
- //   auto prim = graph1.MST_Prim();
- //   prim->print();
+
+    //auto prim = graph1.MST_Prim('A');
+    //prim->print();
 
     cout << "\n\nBFS: \n" ;
     auto bfs1 = graph1.BFS('B');
     bfs1->print();
 
- /*   cout << "\n\nDFS: \n" ;
+    cout << "\n\nDFS: \n" ;
     auto dfs1 = graph1.DFS('B');
     dfs1->print();
-*/
+
     return EXIT_SUCCESS;
 }
