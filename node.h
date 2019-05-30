@@ -42,6 +42,15 @@ public:
 
       if (nodeEdges.front()->getDest()->getReached()) return *std::next(nodeEdges.begin());
       else return *nodeEdges.begin();
+
+    }
+
+    std::vector<char> adjacentNodes(){
+        std::vector<char> adj;
+        for(auto ei : nodeEdges){
+            adj.push_back(ei->getData());
+        }
+        return adj;
     }
 
 private:
