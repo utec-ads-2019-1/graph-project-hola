@@ -47,38 +47,18 @@ public:
         // TODO
     }
 
-
-    void createDS(self){
-      for(auto ni : nodes){
-         mapa.insert({ni->getData(),ni->getData() });
-      }
+    N dsFind(N Nodo){
+        while(Nodo != mapa[Nodo]){
+            mapa[Nodo] = mapa[mapa[Nodo]];
+            Nodo = mapa[Nodo];
+        }
+        return Nodo;
     }
 
 
-    void createDS(){
-        for(auto ni : nodes) {
-            mapa.insert({ni->getData(),ni->getData() });
-        }
-
-        for(auto ei : edgess) {
-            dsJoin(mapa, ei->origin, ei->dest);
-        }
-    }
-
-
-    N dsFind(map<N,N> &mapa, node* Nodo){
-        N nodo = Nodo->getData();
-        while(nodo != mapa[nodo]){
-            mapa[nodo] = mapa[mapa[nodo]];
-            nodo = mapa[nodo];
-        }
-        return nodo;
-    }
-
-
-    void dsJoin(map<N,N> &mapa, node* n1, node* n2){
-        N root1 = dsFind(mapa, n1);
-        N root2 = dsFind(mapa, n2);
+    void dsJoin(N n1, N n2){
+        N root1 = dsFind(n1);
+        N root2 = dsFind(n2);
         mapa[root2] = root1;
     }
 
@@ -91,6 +71,7 @@ public:
       else {
         auto newNode = new node(name, xAxis, yAxis);
         nodes.push_back(newNode);
+        mapa.insert({name,name});
         return true;
       }
     }
@@ -107,6 +88,8 @@ public:
         else {
           edge* newEdge = new edge(weight, firstNode, secondNode, direction);
           edgess.push_back(newEdge);
+          firstNode->addEdge(newEdge);
+          dsJoin(orig, dest);
           return true;
         }
     }
@@ -172,25 +155,24 @@ public:
     }
 
 
-    bool findEdge(N orig, N dest)
-    {
-        if(!getEdge(orig, dest)) return false;
-        else return true;
+    bool findEdge(N orig, N dest) {
+      if(!getEdge(orig, dest)) return false;
+      else return true;
     }
 
-    bool findNode(N name)
-    {
-        if(!getNode(name)) return false;
-        else return true;
+
+    bool findNode(N name) {
+      if(!getNode(name)) return false;
+      else return true;
     }
 
 
     bool density() {
-       float dens = 0.0f;
+      float dens = 0.0f;
 
-        dens = (float)getNumberEdges()/((float)nodes.size()*(float)(nodes.size()-1)) ;
+       dens = (float)getNumberEdges()/((float)nodes.size()*(float)(nodes.size()-1)) ;
 
-        return dens >= 0.6f;
+       return dens >= 0.6f;
     }
 
     bool grade(node a);
@@ -220,9 +202,10 @@ public:
       if (currentNode == nullptr) return nullptr;
 
       else {
-       /* while (controller != nodes.size()) {
-          
-          } */
+        for(auto ni : nodes) {
+          cout << "prim\n";
+          cout << ni->getMinEdge();
+        }
 
         return newGraph;
 
@@ -231,7 +214,23 @@ public:
    }
 
 
-    void MST_Kruskal();
+    Graph* MST_Kruskal(){
+        auto newGraph = new Graph;
+
+        sort();
+        for(auto ni : nodes){
+            newGraph->insertNode(ni->getData(), ni->getX(),ni->getY());
+        }
+        for(auto ei : edgess){
+            N o = ei->getOrigin()->getData();
+            N d = ei->getDest()->getData();
+            if(newGraph->dsFind(o) != newGraph->dsFind(d)){
+                std::cout<<"ENTRO \n";
+                newGraph->insertEdge(o,d,ei->getData(), ei->getDir());
+            }
+        }
+        return newGraph;
+    }    
 
    /*  Graph* BFS(N orig)
     {
