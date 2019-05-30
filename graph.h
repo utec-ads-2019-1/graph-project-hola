@@ -369,7 +369,7 @@ public:
                         {
                             if( (*ei)->getDest() == currentNode && (!(*ei)->getOrigin()->getReached()))
                             {
-                                container.push((*ei)->getDest());
+                                container.push((*ei)->getOrigin());
                                 break;
                             }
                         }
@@ -377,8 +377,23 @@ public:
 
                     if(!container.empty())
                     {
-                        auto tempEdge = getEdge(currentNode->getData(),container.top()->getData());
-                        newGraph->insertEdge(tempEdge->getOrigin()->getData(), tempEdge->getDest()->getData(), tempEdge->getData());
+                        if(currentNode != container.top())
+                        {
+                            if (!(*ei)->getDir())
+                            {
+                                auto tempEdge = getEdge(currentNode->getData(),container.top()->getData());
+                                newGraph->insertEdge(tempEdge->getOrigin()->getData(), tempEdge->getDest()->getData(), tempEdge->getData());
+                            }
+                            else
+                            {
+                                auto tempEdge = getEdgeDir(currentNode->getData(),container.top()->getData());
+                                newGraph->insertEdge(tempEdge->getOrigin()->getData(), tempEdge->getDest()->getData(), tempEdge->getData());
+                            }
+
+
+
+                        }
+
                     }
 
                 }
@@ -388,12 +403,26 @@ public:
     }
 
 
-    Graph* StronglyConnected()
+    bool StronglyConnected()
     {
         auto tempGraph = DFS('B');
-        tempGraph->transpose();
-        return tempGraph;
+
+        stack<node *> container = stackSCC(tempGraph);
+
+        transpose();
+
+        auto topStack = container.top();
+        container.pop();
+
+        auto localSCC = DFS(topStack->getData());
+
+        if(localSCC->getNumberEdges() == this->getNumberEdges())
+            return true;
+
+        return false;
+
     }
+
 
 
     void print() {
@@ -444,6 +473,23 @@ private:
         else return nullptr;
     }
 
+    edge* getEdgeDir(N orig, N dest) {
+
+        edge* tmp = new edge(orig, dest);
+
+        if(edgess.size() > 0) {
+
+            ei = std::find_if(edgess.begin(), edgess.end(), [&tmp](edge* x) {
+                return (x->getDest()->getData() == tmp->getOrigin()->getData()) && (x->getOrigin()->getData() == tmp->getDest()->getData());
+            });
+            if (ei != edgess.end()) return *ei;
+
+            else return nullptr;
+        }
+
+        else return nullptr;
+    }
+
 
     int getNumberEdges() {
         return edgess.size();
@@ -460,6 +506,33 @@ private:
     {
         for (ei = edgess.begin() ;  ei != edgess.end(); ++ei)
             (*ei)->setDir(1);
+    }
+
+
+    stack<node*> stackSCC(Graph* graphDFS)
+    {
+        stack<node *> container;
+
+        for (ni = graphDFS->nodes.begin(); ni != graphDFS->nodes.end(); ni++)
+            (*ni)->setReached(0);
+
+        for (ei = graphDFS->edgess.begin() ;  ei != graphDFS->edgess.end(); ei++)
+        {
+            if( (!(*ei)->getOrigin()->getReached()))
+            {
+                container.push((*ei)->getOrigin());
+                (*ei)->getOrigin()->setReached(1);
+            }
+
+            if (!(*ei)->getDest()->getReached())
+            {
+                container.push((*ei)->getDest());
+                (*ei)->getDest()->setReached(1);
+            }
+
+        }
+
+        return container;
     }
 
 };

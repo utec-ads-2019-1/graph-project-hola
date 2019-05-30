@@ -26,13 +26,13 @@ public:
     node* getDest(){return dest;}
 
     Edge (E orig, E dst) {
-      node* eOrig = new node(orig);
-      node* eDest = new node(dst);
+        node* eOrig = new node(orig);
+        node* eDest = new node(dst);
 
-      origin = eOrig;
-      dest = eDest;
+        origin = eOrig;
+        dest = eDest;
     }
-  
+
 private:
     E data;
     bool dir;

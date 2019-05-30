@@ -57,9 +57,8 @@ int main(int argc, char *argv[]) {
     auto dfs1 = graph1.DFS('B');
     dfs1->print();
 
-    cout << "\n\nSCC: \n" ;
-    auto temp = graph1.StronglyConnected();
-    temp->print();
+    bool a = graph1.StronglyConnected();
+    cout << a;
 
     return EXIT_SUCCESS;
 }
