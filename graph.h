@@ -95,8 +95,7 @@ public:
     }
 
 
-    bool removeNode(N name)
-    {
+    bool removeNode(N name) {
         bool flag = false;
         NodeIte tempIte;
 
@@ -222,6 +221,7 @@ public:
 
 
     Graph* MST_Prim() {
+      if (!connected()) return nullptr;
       auto newGraph = new Graph;
       sort();
 
