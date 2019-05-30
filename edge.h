@@ -9,6 +9,7 @@ class Edge {
 public:
     typedef typename G::E E;
     typedef typename G::node node;
+
     node* origin;
     node* dest;
 
