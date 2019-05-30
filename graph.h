@@ -175,16 +175,40 @@ public:
        return dens >= 0.6f;
     }
 
-    bool grade(node a);
-
-    bool connected(){
-        auto val = mapa.begin()->second;
-        for(auto it = mapa.begin();it != mapa.end();it++){
-            if(it->second != val){
-                return false;
+    int grade(node* currNode) {
+        int temp;
+        for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
+        {
+            if( (*ei)->getOrigin() == currNode || (*ei)->getDest() == currNode ())
+            {
+                temp++;
             }
         }
-        return true;
+        return temp;
+    }
+
+
+    bool connected(){
+        bool flag = true;
+
+                for(ni = nodes.begin(); ni != nodes.end(); ni++)
+                {
+                    for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
+                    {
+                        if( (*ei)->getOrigin() == (*ni) || (*ei)->getDest() == (*ni) )
+                        {
+                            flag = true;
+                            break;
+                        }
+                        else
+                        {
+                            flag = false;
+                        }
+                    }
+                    if(!flag)
+                        break;
+                }
+                return flag;
     }
     
     
