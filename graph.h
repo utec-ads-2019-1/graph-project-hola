@@ -189,13 +189,26 @@ public:
 
 
     bool connected(){
-        auto val = mapa.begin()->second;
-        for(auto it = mapa.begin();it != mapa.end();it++){
-            if(it->second != val){
-                return false;
-            }
-        }
-        return true;
+        bool flag = true;
+
+                for(ni = nodes.begin(); ni != nodes.end(); ni++)
+                {
+                    for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
+                    {
+                        if( (*ei)->getOrigin() == (*ni) || (*ei)->getDest() == (*ni) )
+                        {
+                            flag = true;
+                            break;
+                        }
+                        else
+                        {
+                            flag = false;
+                        }
+                    }
+                    if(!flag)
+                        break;
+                }
+                return flag;
     }
     
     
