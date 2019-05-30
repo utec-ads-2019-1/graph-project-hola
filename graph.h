@@ -175,7 +175,18 @@ public:
        return dens >= 0.6f;
     }
 
-    bool grade(node a);
+    int grade(node* currNode) {
+        int temp;
+        for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
+        {
+            if( (*ei)->getOrigin() == currNode || (*ei)->getDest() == currNode ())
+            {
+                temp++;
+            }
+        }
+        return temp;
+    }
+
 
     bool connected(){
         auto val = mapa.begin()->second;
@@ -208,7 +219,7 @@ public:
             }
             if(color[current->getData()] == 'B'){
                 for(int i = 0;i<adj.size();i++){
-                    if(color[adj[i]] = 'B'){
+                    if(color[adj[i]] == 'B'){
                         return false;
                     }
                     color[adj[i]] = 'R';

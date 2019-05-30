@@ -78,17 +78,6 @@ int main(int argc, char *argv[]) {
     cout << "\nDensity: " << graph1.density() << endl << endl;
 
     graph1.print();
-
-    std::cout<<"\n\nKRUSKAL"<<"\n";
-
-    graph* kruskal = graph1.MST_Kruskal();
-    
-    kruskal->print();
-    
-    std::cout<<"\n\nPPRIM\n";
-    graph* prim = graph1.MST_Prim();
-    prim->print();
-
     
     cout << "\n\nBFS: \n" ;
     auto bfs1 = graph1.BFS('B');
@@ -101,4 +90,14 @@ int main(int argc, char *argv[]) {
     bool a = graph1.StronglyConnected();
     cout << a;
     return EXIT_SUCCESS;
+    
+    std::cout<<"\n\nKRUSKAL"<<"\n";
+
+    graph* kruskal = graph1.MST_Kruskal();
+    
+    kruskal->print();
+    
+    std::cout<<"\n\nPPRIM\n";
+    graph* prim = graph1.MST_Prim();
+    prim->print();
 }
