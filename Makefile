@@ -5,7 +5,7 @@ CFLAGS = -c -Wall
 all: run
 
 run:
-	$(CC) main.cpp -o run
+	$(CC) -std=c++11 main.cpp -o run
 
 .PHONY : clean
 clean:
