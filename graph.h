@@ -208,7 +208,7 @@ public:
             }
             if(color[current->getData()] == 'B'){
                 for(int i = 0;i<adj.size();i++){
-                    if(color[adj[i]] = 'B'){
+                    if(color[adj[i]] == 'B'){
                         return false;
                     }
                     color[adj[i]] = 'R';
