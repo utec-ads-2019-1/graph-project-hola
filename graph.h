@@ -47,6 +47,7 @@ public:
         // TODO
     }
 
+
     N dsFind(N Nodo){
         while(Nodo != mapa[Nodo]){
             mapa[Nodo] = mapa[mapa[Nodo]];
@@ -170,7 +171,7 @@ public:
       float dens = 0.0f;
 
        dens = (float)getNumberEdges()/((float)nodes.size()*(float)(nodes.size()-1)) ;
-
+       
        return dens >= 0.6f;
     }
 
@@ -185,8 +186,8 @@ public:
         }
         return true;
     }
-
-    bool strongConnected();
+    
+    
     bool bipartite(){
         map<char,char> color;
         queue<node*> q;
@@ -242,11 +243,11 @@ public:
           ni->setReached(1);
         }
 
-        return newGraph;
+           return newGraph;
 
-      }
+        }
 
-   }
+    }
 
 
     Graph* MST_Kruskal(){
@@ -341,10 +342,8 @@ public:
         bool nodeVisited, destNodeVisited;
 
         stack<node *> container;
-        list<node *> visited;
 
         auto currentNode = getNode(orig);
-        auto prevNode = currentNode;
 
         if(currentNode == NULL)
             return NULL;
@@ -356,49 +355,87 @@ public:
                 currentNode = container.top();
                 container.pop();
 
-                for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
-                {
-                    if( (*ei)->getDest() == currentNode && ((*ei)->getOrigin()->getReached()))
-                    {
-                        prevNode = (*ei)->getOrigin();
-                        break;
-                    }
-                }
-
-                if(prevNode == NULL)
-                    prevNode = currentNode;
-
-
                 if(!currentNode->getReached())
                 {
-                    //cout << currentNode->getData() << ", ";
-
-                    if(prevNode != currentNode)
-                    {
-                        auto tempEdge = getEdge(prevNode->getData(),currentNode->getData());
-                        newGraph->insertEdge(prevNode->getData(), currentNode->getData(), tempEdge->getData());
-                    }
-
                     currentNode->setReached(1);
 
                     for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
                     {
-                        if( (*ei)->getOrigin() == currentNode && (!(*ei)->getDest()->getReached()))
+                        if (!(*ei)->getDir())
                         {
-                            container.push((*ei)->getDest());
-                            break;
+                            if( (*ei)->getOrigin() == currentNode && (!(*ei)->getDest()->getReached()))
+                            {
+                                container.push((*ei)->getDest());
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            if( (*ei)->getDest() == currentNode && (!(*ei)->getOrigin()->getReached()))
+                            {
+                                container.push((*ei)->getOrigin());
+                                break;
+                            }
                         }
                     }
+
+                    if(!container.empty())
+                    {
+                        if(currentNode != container.top())
+                        {
+                            if (!(*ei)->getDir())
+                            {
+                                auto tempEdge = getEdge(currentNode->getData(),container.top()->getData());
+                                newGraph->insertEdge(tempEdge->getOrigin()->getData(), tempEdge->getDest()->getData(), tempEdge->getData());
+                            }
+                            else
+                            {
+                                auto tempEdge = getEdgeDir(currentNode->getData(),container.top()->getData());
+                                newGraph->insertEdge(tempEdge->getOrigin()->getData(), tempEdge->getDest()->getData(), tempEdge->getData());
+                            }
+
+                        }
+
+                    }
+
                 }
             }
             return newGraph;
         }
     }
 
+
+    bool StronglyConnected()
+    {
+        auto tempGraph = DFS('B');
+
+        stack<node *> container = stackSCC(tempGraph);
+
+        transpose();
+
+        auto topStack = container.top();
+        container.pop();
+
+        auto localSCC = DFS(topStack->getData());
+
+        if(localSCC->getNumberEdges() == this->getNumberEdges())
+            return true;
+
+        return false;
+
+    }
+
+
+
     void print() {
-      for (auto ei : edgess) {
-        std::cout << ei->getOrigin()->getData() << " [" << ei->getData() << "] -> " << ei->getDest()->getData() << "\n";
-      }
+        for (auto ei : edgess) {
+
+            if(!ei->getDir())
+                std::cout << ei->getOrigin()->getData() << " [" << ei->getData() << "] -> " << ei->getDest()->getData() << "\n";
+            else
+                std::cout << ei->getDest()->getData() << " [" << ei->getData() << "] -> " << ei->getOrigin()->getData() << "\n";
+
+        }
     }
 
 
@@ -407,49 +444,99 @@ private:
     EdgeSeq edgess;
     NodeIte ni;
     EdgeIte ei;
-    map<N,N> mapa; 
+    map<N,N> mapa;
 
     node *getNode(N name) {
-      auto *tmp = new node(name);
+        auto *tmp = new node(name);
 
-      if(nodes.size()>0) {
-        ni = std::find_if(nodes.begin(), nodes.end(), [&tmp](node* x) {return x->getData() == tmp->getData();});
-        if(ni != nodes.end())  return *ni;
-        
+        if(nodes.size()>0) {
+            ni = std::find_if(nodes.begin(), nodes.end(), [&tmp](node* x) {return x->getData() == tmp->getData();});
+            if(ni != nodes.end())  return *ni;
+            else return nullptr;
+        }
+
         else return nullptr;
-       }
-      
-      else return nullptr;
     }
 
 
     edge *getEdge(N orig, N dest) {
 
-      edge* tmp = new edge(orig, dest);
-      
-      if(edgess.size() > 0) {
-        ei = std::find_if(edgess.begin(), edgess.end(), [&tmp](edge* x) {
-            return (x->getOrigin()->getData() == tmp->getOrigin()->getData()) && (x->getDest()->getData() == tmp->getDest()->getData());
+        edge* tmp = new edge(orig, dest);
+
+        if(edgess.size() > 0) {
+            ei = std::find_if(edgess.begin(), edgess.end(), [&tmp](edge* x) {
+                return (x->getOrigin()->getData() == tmp->getOrigin()->getData()) && (x->getDest()->getData() == tmp->getDest()->getData());
             });
-        if (ei != edgess.end()) return *ei;
+            if (ei != edgess.end()) return *ei;
+
+            else return nullptr;
+        }
 
         else return nullptr;
-      }
+    }
 
-      else return nullptr;
+    edge* getEdgeDir(N orig, N dest) {
+
+        edge* tmp = new edge(orig, dest);
+
+        if(edgess.size() > 0) {
+
+            ei = std::find_if(edgess.begin(), edgess.end(), [&tmp](edge* x) {
+                return (x->getDest()->getData() == tmp->getOrigin()->getData()) && (x->getOrigin()->getData() == tmp->getDest()->getData());
+            });
+            if (ei != edgess.end()) return *ei;
+
+            else return nullptr;
+        }
+
+        else return nullptr;
     }
 
 
     int getNumberEdges() {
-      return edgess.size();
+        return edgess.size();
     }
 
 
     void sort() {
-      if (edgess.size() > 0) {
-        edgess.sort([](edge* a, edge* b) {return a->getData() < b->getData();});
-       }
+        if (edgess.size() > 0) {
+            edgess.sort([](edge* a, edge* b) {return a->getData() < b->getData();});
+        }
     }
+
+    void transpose()
+    {
+        for (ei = edgess.begin() ;  ei != edgess.end(); ++ei)
+            (*ei)->setDir(1);
+    }
+
+
+    stack<node*> stackSCC(Graph* graphDFS)
+    {
+        stack<node *> container;
+
+        for (ni = graphDFS->nodes.begin(); ni != graphDFS->nodes.end(); ni++)
+            (*ni)->setReached(0);
+
+        for (ei = graphDFS->edgess.begin() ;  ei != graphDFS->edgess.end(); ei++)
+        {
+            if( (!(*ei)->getOrigin()->getReached()))
+            {
+                container.push((*ei)->getOrigin());
+                (*ei)->getOrigin()->setReached(1);
+            }
+
+            if (!(*ei)->getDest()->getReached())
+            {
+                container.push((*ei)->getDest());
+                (*ei)->getDest()->setReached(1);
+            }
+
+        }
+
+        return container;
+    }
+
 };
 
 typedef Graph<Traits> graph;

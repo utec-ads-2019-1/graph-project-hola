@@ -9,7 +9,8 @@ class Edge {
 public:
     typedef typename G::E E;
     typedef typename G::node node;
-
+    node* origin;
+    node* dest;
     node* origin;
     node* dest;
 
@@ -33,7 +34,7 @@ public:
     Edge (E orig, E dst) {
       node* eOrig = new node(orig);
       node* eDest = new node(dst);
-
+      
       origin = eOrig;
       dest = eDest;
     }
