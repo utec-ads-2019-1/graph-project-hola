@@ -63,13 +63,13 @@ public:
     }
 
 
-    bool insertNode(N name, double xAxis = 0, double yAxis = 0) {
+    bool insertNode(N name, double xAxis = 0, double yAxis = 0, bool reached = 0) {
       auto tempNode = getNode(name);
       
       if(tempNode) return false;
 
       else {
-        auto newNode = new node(name, xAxis, yAxis);
+        auto newNode = new node(name, xAxis, yAxis, reached);;
         nodes.push_back(newNode);
         mapa.insert({name,name});
         return true;
@@ -195,16 +195,19 @@ public:
       auto newGraph = new Graph;
       sort();
 
-      int controller = 0;
       node* currentNode = getNode(edgess.front()->getOrigin()->getData());
-      cout << edgess.front()->getData() << " <-\n";
 
       if (currentNode == nullptr) return nullptr;
 
       else {
+
         for(auto ni : nodes) {
-          cout << "prim\n";
-          cout << ni->getMinEdge();
+          //cout << "min->" << ni->getMinEdge()->getDest()->getData() << "\n";
+          auto aux = ni->getMinEdge()->getOrigin();
+          newGraph->insertNode(aux->getData(), aux->getX(), aux->getY(), 1);
+          cout << aux->getData() << "->" <<  ni->getMinEdge()->getDest()->getData() << "[" <<  ni->getMinEdge()->getData() << "] " <<  ni->getMinEdge()->getDir() << "\n";
+          newGraph->insertEdge(aux->getData(), ni->getMinEdge()->getDest()->getData(), ni->getMinEdge()->getData(), ni->getMinEdge()->getDir());
+          ni->setReached(1);
         }
 
         return newGraph;
