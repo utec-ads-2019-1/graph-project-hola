@@ -221,20 +221,23 @@ public:
 
 
     void MST_Kruskal();
+
+
     Graph* BFS(N orig)
     {
         auto newGraph = new Graph;
 
         for (ni = this->nodes.begin(); ni != this->nodes.end(); ni++)
+        {
             newGraph->insertNode((*ni)->getData(), (*ni)->getX(), (*ni)->getY());
-
-        bool nodeVisited, destNodeVisited;
+            (*ni)->setReached(0);
+        }
 
         queue<node *> container;
-        list<node *> visited;
 
         auto currentNode = getNode(orig);
         auto prevNode = currentNode;
+        int a = 0;
 
         if(currentNode == NULL)
             return NULL;
@@ -243,43 +246,39 @@ public:
             container.push(currentNode);
             while(container.size()>0)
             {
-                nodeVisited = false;
-                prevNode = currentNode;
+                //prevNode = currentNode;
                 currentNode = container.front();
                 container.pop();
-                for (auto it = visited.begin(); it != visited.end() ; it++)
+
+                for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
                 {
-                    if(*it == currentNode)
+                    if( (*ei)->getDest() == currentNode && ((*ei)->getOrigin()->getReached()))
                     {
-                        nodeVisited = true;
+                        prevNode = (*ei)->getOrigin();
                         break;
                     }
                 }
-                if(!nodeVisited)
+
+                if(prevNode == NULL)
+                    prevNode = currentNode;
+
+
+                if(!currentNode->getReached())
                 {
                     //cout << currentNode->getData() << ", ";
 
                     if(prevNode != currentNode)
                     {
-                        //auto tempEdge = getEdge(prevNode->getData(),currentNode->getData());
-                        newGraph->insertEdge(prevNode->getData(), currentNode->getData());
+                        auto tempEdge = getEdge(prevNode->getData(),currentNode->getData());
+                        newGraph->insertEdge(prevNode->getData(), currentNode->getData(), tempEdge->getData());
                     }
 
 
-                    visited.push_back(currentNode);
+                    currentNode->setReached(1);
 
                     for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
                     {
-                        destNodeVisited = 0;
-                        for(auto it = visited.begin(); it != visited.end(); it++)
-                        {
-                            if((*ei)->getDest() == *it)
-                            {
-                                destNodeVisited = true;
-                                break;
-                            }
-                        }
-                        if(!destNodeVisited)
+                        if( (*ei)->getOrigin() == currentNode && (!(*ei)->getDest()->getReached()))
                         {
                             container.push((*ei)->getDest());
                         }
