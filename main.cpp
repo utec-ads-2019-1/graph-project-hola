@@ -50,8 +50,8 @@ int main(int argc, char *argv[]) {
     graph1.insertEdge('A','C',6);
     graph1.insertEdge('C','B',3);
     // graph1.insertEdge('B','A',5);
-////////////////////////////////////
-//TEST DE BIPARTITO
+
+    //TEST DE BIPARTITO
 
 
     std::cout<<"Es conexo: "<<graph1.connected()<<"\n";
