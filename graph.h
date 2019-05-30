@@ -270,40 +270,36 @@ public:
         return newGraph;
     }    
 
-    Graph* BFS(N orig){
-        auto newGraph = new Graph;
 
-        for (ni = this->nodes.begin(); ni != this->nodes.end(); ni++)
-        {
-            newGraph->insertNode((*ni)->getData(), (*ni)->getX(), (*ni)->getY());
-            (*ni)->setReached(0);
+    Graph* BFS(N orig) {
+      auto newGraph = new Graph;
+
+      for (ni = this->nodes.begin(); ni != this->nodes.end(); ni++) {
+        newGraph->insertNode((*ni)->getData(), (*ni)->getX(), (*ni)->getY());
+        (*ni)->setReached(0);
+      }
+
+      queue<node *> container;
+
+      auto currentNode = getNode(orig);
+      auto prevNode = currentNode;
+
+      if(currentNode == NULL) return NULL;
+       
+      else {
+        container.push(currentNode);
+        
+        while(container.size()>0) {
+        //prevNode = currentNode;
+        currentNode = container.front();
+        container.pop();
+
+        for (ei = edgess.begin() ;  ei != edgess.end(); ei++) {
+          if( (*ei)->getDest() == currentNode && ((*ei)->getOrigin()->getReached())) {
+            prevNode = (*ei)->getOrigin();
+            break;
+          }
         }
-
-        queue<node *> container;
-
-        auto currentNode = getNode(orig);
-        auto prevNode = currentNode;
-        int a = 0;
-
-        if(currentNode == NULL)
-            return NULL;
-        else
-        {
-            container.push(currentNode);
-            while(container.size()>0)
-            {
-                //prevNode = currentNode;
-                currentNode = container.front();
-                container.pop();
-
-                for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
-                {
-                    if( (*ei)->getDest() == currentNode && ((*ei)->getOrigin()->getReached()))
-                    {
-                        prevNode = (*ei)->getOrigin();
-                        break;
-                    }
-                }
 
                 if(prevNode == NULL)
                     prevNode = currentNode;
@@ -333,6 +329,7 @@ public:
             }
             return newGraph;
         }
+
     }
 
 
