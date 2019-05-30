@@ -19,21 +19,25 @@ int main(int argc, char *argv[]) {
     graph1.insertNode('D');
     graph1.insertNode('E');
     graph1.insertNode('F');
+    graph1.insertNode('G');
 
-    graph1.insertEdge('A', 'B', 8);
-    graph1.insertEdge('A', 'D', 9);
-    graph1.insertEdge('B', 'E', 20);
-    graph1.insertEdge('B', 'A', 8);
-    //graph1.insertEdge('C', 'F', 4);
-    graph1.insertEdge('D', 'A', 9);
-    graph1.insertEdge('D', 'F', 5);
-    graph1.insertEdge('D', 'E', 20);
-    graph1.insertEdge('E', 'D', 20);
-    graph1.insertEdge('E', 'B', 10);
-    graph1.insertEdge('F', 'D', 5);
-    //graph1.insertEdge('F', 'C', 4);
+    graph1.insertEdge('A', 'B', 5);
+    graph1.insertEdge('B', 'C', 8);
+    graph1.insertEdge('B', 'A', 5);
+    graph1.insertEdge('C', 'D', 2);
+    graph1.insertEdge('C', 'F', 20);
+    graph1.insertEdge('C', 'B', 8);
+    graph1.insertEdge('D', 'C', 2);
+    graph1.insertEdge('D', 'F', 9);
+    graph1.insertEdge('D', 'E', 3);
+    graph1.insertEdge('E', 'D', 3);
+    graph1.insertEdge('E', 'G', 10);
+    graph1.insertEdge('F', 'C', 20);
+    graph1.insertEdge('F', 'D', 9);
+    graph1.insertEdge('F', 'G', 50);
+    graph1.insertEdge('G', 'F', 50);
+    graph1.insertEdge('G', 'E', 10);
 
-    // graph1.createDS();
 
     std::cout<<"Es conexo: "<<graph1.connected()<<"\n";
     
@@ -41,11 +45,11 @@ int main(int argc, char *argv[]) {
 
     graph1.print();
 
-    // std::cout<<"KRUSKAL"<<"\n\n";
+    std::cout<<"KRUSKAL"<<"\n\n";
 
-    // graph* kruskal = graph1.MST_Kruskal();
+    graph* kruskal = graph1.MST_Kruskal();
     
-    // kruskal->print();
+    kruskal->print();
 
     // auto prim = graph1.MST_Prim();
     // prim->print();

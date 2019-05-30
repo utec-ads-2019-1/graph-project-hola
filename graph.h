@@ -47,7 +47,7 @@ public:
         // TODO
     }
 
-    N dsFind(map<N,N> &mapa, N Nodo){
+    N dsFind(N Nodo){
         while(Nodo != mapa[Nodo]){
             mapa[Nodo] = mapa[mapa[Nodo]];
             Nodo = mapa[Nodo];
@@ -56,9 +56,9 @@ public:
     }
 
 
-    void dsJoin(map<N,N> &mapa, N n1, N n2){
-        N root1 = dsFind(mapa, n1);
-        N root2 = dsFind(mapa, n2);
+    void dsJoin(N n1, N n2){
+        N root1 = dsFind(n1);
+        N root2 = dsFind(n2);
         mapa[root2] = root1;
     }
 
@@ -88,7 +88,7 @@ public:
         else {
           edge* newEdge = new edge(weight, firstNode, secondNode, direction);
           edgess.push_back(newEdge);
-          dsJoin(mapa, orig, dest);
+          dsJoin(orig, dest);
           return true;
         }
     }
@@ -223,12 +223,11 @@ public:
         for(auto ei : edgess){
             N o = ei->getOrigin()->getData();
             N d = ei->getDest()->getData();
-            if(dsFind(newGraph,o) != dsFind(mapa,d)){
+            if(newGraph->dsFind(o) != newGraph->dsFind(d)){
                 std::cout<<"ENTRO \n";
-                newGraph->insertEdge(o->getData(),d->getData(),ei->getData(), ei->getDir());
+                newGraph->insertEdge(o,d,ei->getData(), ei->getDir());
             }
         }
-        std::cout<<"HOLA PELADA"<<"\n";
         return newGraph;
     }    
 
