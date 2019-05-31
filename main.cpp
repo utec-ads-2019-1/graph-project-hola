@@ -13,7 +13,6 @@ int main(int argc, char *argv[]) {
 
     graph graph1;
 
-
 graph1.insertNode('A');
 graph1.insertNode('B');
 graph1.insertNode('C');
