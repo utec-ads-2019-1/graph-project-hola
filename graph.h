@@ -248,28 +248,29 @@ public:
     Graph* MST_Prim() {
       if (!connected()) return nullptr;
       auto newGraph = new Graph;
-      sort();
 
       node* currentNode = getNode(edgess.front()->getOrigin()->getData());
 
       if (currentNode == nullptr) return nullptr;
 
       else {
-
         for(auto ni : nodes) {
-          //cout << "min->" << ni->getMinEdge()->getDest()->getData() << "\n";
-          auto o = ni->getMinEdge()->getOrigin();
-          auto d = ni->getMinEdge()->getDest();
-    
-          newGraph->insertNode(o->getData(), o->getX(), o->getY(), 1);
-          cout << o->getData() << "->" <<  d->getData() << "[" <<  ni->getMinEdge()->getData() << "] " << "\n";
-          newGraph->insertEdge(o->getData(), d->getData(), ni->getMinEdge()->getData(), ni->getMinEdge()->getDir());
-          ni->setReached(1);
-        }
+          if (!ni->getMinEdge()) ni++;
+         
+          else {
+            auto o = ni->getMinEdge()->getOrigin();
+            auto d = ni->getMinEdge()->getDest();
+
+            newGraph->insertNode(o->getData(), o->getX(), o->getY(), 1);
+
+            cout << o->getData() << "->" <<  d->getData() << "[" <<  ni->getMinEdge()->getData() << "] " << "\n";
+            newGraph->insertEdge(o->getData(), d->getData(), ni->getMinEdge()->getData(), ni->getMinEdge()->getDir());
+            ni->setReached(1);
+          }
+       }
 
            return newGraph;
-
-        }
+       }
 
     }
 

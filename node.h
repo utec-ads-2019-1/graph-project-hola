@@ -41,7 +41,8 @@ public:
       nodeEdges.sort([](edge* a, edge* b) {return a->getData() < b->getData();});
       
       auto current = *nodeEdges.begin();
-      
+
+      if (nodeEdges.size() == 0 ) return nullptr;
       if (nodeEdges.front()->getDest()->getReached()) {
         if (nodeEdges.size() == 1) {
           edge* nuevo = new edge(current->getData(), current->getDest(), current->getOrigin(), current->getDir());
@@ -51,6 +52,7 @@ public:
         while(current->getDest()->getReached() && current != *nodeEdges.end()) {
           current = *std::next(nodeEdges.begin());
         }
+
         return current;
       }
       
