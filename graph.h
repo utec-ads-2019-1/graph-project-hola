@@ -154,19 +154,6 @@ public:
         return false;
     }
 
-
-    bool findEdge(N orig, N dest) {
-      if(!getEdge(orig, dest)) return false;
-      else return true;
-    }
-
-
-    bool findNode(N name) {
-      if(!getNode(name)) return false;
-      else return true;
-    }
-
-
     bool density() {
       float dens = 0.0f;
 
@@ -355,7 +342,7 @@ public:
 
 
     Graph* DFS(N orig){
-         auto newGraph = new Graph;
+        auto newGraph = new Graph;
 
         for (ni = this->nodes.begin(); ni != this->nodes.end(); ni++)
         {
@@ -463,6 +450,14 @@ public:
         }
     }
 
+    //////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////SEGUNDA ENTREGA////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////
+
+    graph* Dijkstra(N a){
+
+    }
+
 
 private:
     NodeSeq nodes;
@@ -482,7 +477,6 @@ private:
 
         else return nullptr;
     }
-
 
     edge *getEdge(N orig, N dest) {
 
@@ -522,6 +516,9 @@ private:
         return edgess.size();
     }
 
+    int getNumberNodes(){
+        return nodes.size();
+    }
 
     void sort() {
         if (edgess.size() > 0) {

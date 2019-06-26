@@ -18,8 +18,8 @@ public:
     EdgeIte nie;
 
     Node(){}
-    Node(N value){data = value; x = y = reached = 0;}
-    Node(N value, double xAxis, double yAxis, bool r){data = value; x= xAxis; y = yAxis; reached = r;}
+    Node(N value){data = value; x = y = 0;}
+    Node(N value, double xAxis, double yAxis){data = value; x= xAxis; y = yAxis;}
 
     N getData() {return data;}
     void setData(N newData) {data = newData;}
