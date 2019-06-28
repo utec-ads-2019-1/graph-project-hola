@@ -15,6 +15,7 @@ public:
     typedef std::list<edge*> Seq;
     typedef typename EdgeSeq::iterator EdgeIte;
     EdgeSeq edges;
+
     EdgeIte nie;
 
     Node(){}
@@ -32,14 +33,15 @@ public:
 
     bool getReached(){return reached;}
     void setReached(bool R){reached = R;}
-    
+
     void addEdge(edge* ed) {
       nodeEdges.push_back(ed);
     }
+    Seq getEdgeVector(){return nodeEdges;}
 
     edge* getMinEdge() {
       nodeEdges.sort([](edge* a, edge* b) {return a->getData() < b->getData();});
-      
+
       auto current = *nodeEdges.begin();
 
       if (nodeEdges.size() == 0 ) return nullptr;
@@ -48,14 +50,14 @@ public:
           edge* nuevo = new edge(current->getData(), current->getDest(), current->getOrigin(), current->getDir());
           return nuevo;
         }
-        
+
         while(current->getDest()->getReached() && current != *nodeEdges.end()) {
           current = *std::next(nodeEdges.begin());
         }
 
         return current;
       }
-      
+
       else return *nodeEdges.begin();
     }
 
@@ -68,7 +70,7 @@ public:
     }
 
 private:
-    N data = NULL;
+    N data;
     double x;
     double y;
     bool reached;
