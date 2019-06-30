@@ -4,8 +4,8 @@
 #include <GL/glew.h>
 #include <glut.h>
 #include <GLFW/glfw3.h>
-#include "graph2.h"
-#include "read.h"
+#include "graph.h"
+//#include "read.h"
 #define WINDOW 950
 using namespace std;
 
@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
 		{
 			glClear(GL_COLOR_BUFFER_BIT);
 
-	graph graph1;
+	graph graph1(2);
 
 	graph1.insertNode('A',9,2);
 	graph1.insertNode('B',14,7);
@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
 	graph1.insertNode('G',1,4);
 	graph1.insertNode('H',4,1); */
 
-	graph1.insertEdge('A', 'B', 11);
+	graph1.insertEdge('A', 'B', 11,1);
 // graph1.insertEdge('A', 'C', 24);
 // graph1.insertEdge('A', 'F', 1);
 // graph1.insertEdge('B', 'F', 4);
@@ -58,6 +58,7 @@ int main(int argc, char *argv[]) {
 // graph1.insertEdge('D', 'F', 9);
 // graph1.insertEdge('D', 'E', 51);
 // graph1.insertEdge('E', 'H', 2);
+	graph1.drawGraph();
     
 
  glfwSwapBuffers(window);				//Swap de los buffers
