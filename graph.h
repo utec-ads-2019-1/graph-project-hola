@@ -6,6 +6,7 @@
 #include <stack>
 #include <queue>
 #include <map>
+#include <math.h>
 #include "node.h"
 #include "edge.h"
 #include "read.h"
@@ -583,14 +584,127 @@ public:
     }
 
 
+
+    Graph* A_star(N orig, N dest)
+    {
+        auto newGraph = new Graph;
+        // printf("\nA* (A Star) Function\n");
+
+        nodeA = new sNode[nodes.size()];
+        uint8_t i = 0;
+
+        for (auto ni : nodes)
+        {
+            newGraph->insertNode(ni->getData(), ni->getX(), ni->getY());
+            ni->setReached(0);
+            nodeA[i].content = ni;
+            nodeA[i].fGlobalGoal = std::numeric_limits<int>::max();
+            nodeA[i].fLocalGoal= std::numeric_limits<int>::max();
+            nodeA[i].parent = nullptr;
+            i++;
+        }
+
+        for(uint8_t j = 0; j <nodes.size(); j++)
+        {
+            for(auto ei : nodeA[j].content->getEdgeVector())
+            {
+                nodeA[j].vecNeighbours.push_back(&nodeA[ei->getDest()->getData()]);
+            }
+        }
+
+
+        auto origNode = getNode(orig);
+        auto destNode = getNode(dest);
+
+        nodeStart = &nodeA[orig];
+        nodeEnd = &nodeA[dest];
+
+        sNode* current = nodeStart;
+
+        current->fLocalGoal = 0.0f;
+        current->fGlobalGoal = distance(origNode, destNode);
+
+        list<sNode*> listNotTestedNodes;
+        listNotTestedNodes.push_back(nodeStart);
+
+        while(!listNotTestedNodes.empty() && current != nodeEnd)
+        {
+            listNotTestedNodes.sort([](const sNode* lhs, const sNode* rhs){
+                return lhs->fGlobalGoal < rhs->fGlobalGoal;
+            });
+
+            while(!listNotTestedNodes.empty() && listNotTestedNodes.front()->content->getReached())
+                listNotTestedNodes.pop_front();
+
+            if (listNotTestedNodes.empty())
+                break;
+
+            current = listNotTestedNodes.front();
+            current->content->setReached(true);
+
+
+            for (auto nodeNeighbour : current->vecNeighbours)
+            {
+                if (!nodeNeighbour->content->getReached())
+                    listNotTestedNodes.push_back(nodeNeighbour);
+
+                float fPossiblyLowerGoal = current->fLocalGoal + getEdge(current->content->getData(), nodeNeighbour->content->getData())->getData();;
+
+                if (fPossiblyLowerGoal < nodeNeighbour->fLocalGoal)
+                {
+                    nodeNeighbour->parent = current;
+                    nodeNeighbour->fLocalGoal = fPossiblyLowerGoal;
+
+                    nodeNeighbour->fGlobalGoal = nodeNeighbour->fLocalGoal + distance(nodeNeighbour->content, nodeEnd->content);
+
+                }
+            }
+
+
+        }
+        current = nodeEnd;
+        while(current != nodeStart)
+        {
+            if(current->parent != nullptr)
+            {
+                auto temp_init = current->parent->content->getData();
+                auto temp_end = current->content->getData();
+                auto temp_edge = getEdge(temp_init, temp_end);
+                newGraph->insertEdge(temp_init ,temp_end, temp_edge->getData(), temp_edge->getDir());
+            }
+            current = current->parent;
+        }
+
+        return newGraph;
+    }
+
+    double distance(node* a, node* b)
+    {
+        return sqrt((a->getX() - b->getX())*(a->getX() - b->getX()) + (a->getY() - b->getY())*(a->getY() - b->getY()));
+    };
+
+
 private:
     NodeSeq nodes;
     EdgeSeq edgess;
     NodeIte ni;
     EdgeIte ei;
     map<N,N> mapa;
-		int **edges_matrix;
-		int size;
+	int **edges_matrix;
+	int size;
+
+    struct sNode
+    {
+        node* content;
+        float fGlobalGoal;              // Distance to goal so far
+        float fLocalGoal;               // Distance to goal if we took the alternative route
+        vector<sNode*> vecNeighbours;   // Connections to neighbours
+        sNode* parent;                  // Node connecting to this node that offers shortest parent
+    };
+
+    sNode *nodeA = nullptr;
+    sNode *nodeStart = nullptr;
+    sNode *nodeEnd = nullptr;
 
 };
 
