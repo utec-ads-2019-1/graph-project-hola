@@ -281,4 +281,5 @@ paket-files/
 *.sln.iml
 =======
 run
-
+*.h.swp
+*.cpp.swp
