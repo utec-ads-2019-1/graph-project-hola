@@ -30,6 +30,7 @@ class Graph {
         typedef typename EdgeSeq::iterator EdgeIte;
 
         int nodesize = nodes.size();
+        int edgessize = edgess.size();
 
 
     bool insertNode(N name, double xAxis = 0, double yAxis = 0) {
@@ -51,15 +52,16 @@ class Graph {
         
         if(firstNode == nullptr || secondNode == nullptr) { return false;}
 
-        else if(getEdge(orig, dest) != nullptr) return false;
+        //else if(getEdge(orig, dest) != nullptr) return false;
   
         else {
           edge* newEdge = new edge(weight, firstNode, secondNode, direction);
           firstNode->addEdge(newEdge);
-          originX = firstNode->getX;
-          originY = firstNode->getY;
-          destX = secondNode->getX;
-          destY = secondNode->getY;
+          edgess.push_back(newEdge);
+          float originX = firstNode->getX();
+		  float originY = firstNode->getY();
+		  float destX = secondNode->getX();
+		  float destY = secondNode->getY();
           if(direction == 1){
             Draw::drawArrow(weight,originX,originY,destX,destY);
           }
@@ -94,7 +96,7 @@ class Graph {
         }
 
         else return nullptr;
-    }
+    } 
 
     int getNumberEdges() {
         return edgess.size();
@@ -120,8 +122,9 @@ class Graph {
         unordered_map<char,bool> visited;
     }
 
+    NodeSeq nodes;
+    EdgeSeq edgess;
     private:
-        NodeSeq nodes;
         NodeIte ni;
         EdgeIte ei;
 };

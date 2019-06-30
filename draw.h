@@ -6,6 +6,7 @@
 #include <glut.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <string>
 #define _USE_MATH_DEFINES
 #include <math.h>
 #define WINDOW 950
@@ -13,10 +14,21 @@
 #define RADIUS REAL_RADIUS * 0.05
 #define NORM 0.05
 
+using namespace std;
+
 class Draw {
 
 public:
-	static void drawArrow(double x1, double y1, double x2, double y2) {
+	static string int_string(int n){
+    string str;
+    while(n){
+        str.push_back(n%10 + 48);
+        n = n/10;
+    }
+    reverse(str.begin(), str.end());
+    return str;
+}
+	static void drawArrow(int weight,double x1, double y1, double x2, double y2) {
 		glEnable(GL_LINE_SMOOTH);
 		glLineWidth(4.0);
 
@@ -61,14 +73,23 @@ public:
 		glVertex2f(newX, newY);
 		glVertex2f(newX + size * (vx - vy), newY + size * (vy + vx));
 		glEnd();
+		glColor3f(0.0, 0.0, 1.0);
+		GLvoid *font_style = GLUT_BITMAP_HELVETICA_18;
+		float yW = (y1 + y2) / 2;
+		float xW = (x1 + x2) / 2;
+		string str = int_string(weight);
+		glRasterPos2f(xW, yW + 0.03);
+		for (int i = 0; i < str.size(); i++) {
+			glutBitmapCharacter(font_style, str[i]);
+		}
 	}
 	static void drawLine(int weight, double x1, double y1, double x2, double y2) {
 		glEnable(GL_LINE_SMOOTH);
 		glLineWidth(1.0);
-		x1 *= 0.12;
-		y1 *= 0.12;
-		x2 *= 0.12;
-		y2 *= 0.12;
+		x1 *= NORM;
+		y1 *= NORM;
+		x2 *= NORM;
+		y2 *= NORM;
 		glBegin(GL_LINES);
 		glColor4f(1.0, 0.0, 0.0, 1.0);
 		glVertex2f(x1, y1);
@@ -100,6 +121,8 @@ public:
 		glEnd();
 		glColor3f(0.0, 0.0, 1.0);
 		GLvoid *font_style = GLUT_BITMAP_HELVETICA_18;
+		x0 = x0 - 0.011;
+		y0 = y0 - 0.01;
 		glRasterPos2f(x0, y0);
 		glutBitmapCharacter(font_style, C);
 	}

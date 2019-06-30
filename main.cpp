@@ -36,16 +36,16 @@ int main(int argc, char *argv[]) {
 
 	graph graph1;
 
-	graph1.insertNode('A',3,2);
-	graph1.insertNode('B',5,1);
-	graph1.insertNode('C',7,2);
+	graph1.insertNode('A',9,2);
+	graph1.insertNode('B',14,7);
+/*	graph1.insertNode('C',7,2);
 	graph1.insertNode('D',3,4);
 	graph1.insertNode('E',1,2);
 	graph1.insertNode('F',2,5);
 	graph1.insertNode('G',1,4);
-	graph1.insertNode('H',4,1);
+	graph1.insertNode('H',4,1); */
 
-// graph1.insertEdge('A', 'B', 11);
+	graph1.insertEdge('A', 'B', 11);
 // graph1.insertEdge('A', 'C', 24);
 // graph1.insertEdge('A', 'F', 1);
 // graph1.insertEdge('B', 'F', 4);
