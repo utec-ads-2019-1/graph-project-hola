@@ -134,7 +134,7 @@ public:
     }
 
 
-    bool insertNode(N name, double xAxis = 0, double yAxis = 0, bool reached = 0) {
+    bool insertNode(N name, double xAxis = 0, double yAxis = 0) {
       auto tempNode = getNode(name);
 
       if(tempNode) return false;
@@ -228,7 +228,6 @@ public:
         }
         return false;
     }
-
 
     bool findEdge(N orig, N dest) {
         if(!getEdge(orig, dest)) return false;
@@ -427,7 +426,6 @@ public:
 
     Graph* DFS(N orig){
         auto newGraph = new Graph;
-
         stack<node *> container;
 
         for (ni = this->nodes.begin(); ni != this->nodes.end(); ni++)
@@ -487,17 +485,12 @@ public:
         return(localSCC->getNumberEdges() == this->getNumberEdges());
     }
 
+    //////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////SEGUNDA ENTREGA////////////////////////////////
+    //////////////////////////////////////////////////////////////////////////////
 
+    Graph* Dijkstra(N a){
 
-    void print() {
-        for (auto ei : edgess) {
-
-            if(!ei->getDir())
-                std::cout << ei->getOrigin()->getData() << " [" << ei->getData() << "] -> " << ei->getDest()->getData() << "\n";
-            else
-                std::cout << ei->getDest()->getData() << " [" << ei->getData() << "] -> " << ei->getOrigin()->getData() << "\n";
-
-        }
     }
 
     void print2(){
@@ -523,8 +516,6 @@ public:
 
         else return nullptr;
     }
-
-
 
     edge *getEdge(N orig, N dest) {
 
@@ -564,6 +555,9 @@ public:
         return edgess.size();
     }
 
+    int getNumberNodes(){
+        return nodes.size();
+    }
 
     void sort() {
         if (edgess.size() > 0) {

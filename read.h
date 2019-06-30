@@ -4,6 +4,7 @@
 #include "graph.h"
 #include <fstream>
 
+
 using namespace std;
 /**
  * Clase de ayuda para leer el grafo desde un archivo,
@@ -31,7 +32,6 @@ class Read {
     }
 		
 		graph& getGraph() {
-            // TODO
         }
 };
 
