@@ -28,6 +28,7 @@ graph1.insertEdge('C', 'D', 2, 1);
 graph1.insertEdge('D', 'B', 3, 1);
     
  /*   std::cout<<"Es conexo: "<<graph1.connected()<<"\n";
+ 
     std::cout<<"Es bipartito: "<<graph1.bipartite()<<"\n";
 
     cout << "\nDensity: " << graph1.density() << endl << endl;
