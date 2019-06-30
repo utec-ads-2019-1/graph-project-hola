@@ -3,7 +3,9 @@
 
 #include "graph.h"
 #include <fstream>
-#include <iostream>
+
+
+using namespace std;
 /**
  * Clase de ayuda para leer el grafo desde un archivo,
  * no es necesario que la utilicen, podrían implementar su lector
@@ -13,35 +15,21 @@ template <typename G>
 class Read {
 	typedef typename G::N N;
 	typedef typename G::E E;
+	graph graph1;
 		
 	public:
-		std::ifstream f;
-		graph graph1;
-		Read(char* file) {
-			int Nodes;
-			int Edges;
-			N a;
-			N b;
-			E w;
-			double x;
-			double y;
-			bool d;
-			f.open(file);
-			if(!f){
-				std::cout<<"Error al leer el file :c\n";
-			}
-			f>>Nodes;
-			for(int i =0;i<Nodes;i++){
-				f>>a>>x>>y;
-				graph1.insertNode(a,x,y);
-			}
-			f>>Edges;
-			for(int i =0;i<Edges;i++){
-				f>>a>>b>>w>>d;
-				graph1.insertEdge(a,b,w,d);
-			}
+		Read(string* txt) {
+			string line;
 
-        }
+			ifstream file(txt->c_str());
+
+			if (!file) cout << "error\n";
+
+			while(!file.eof()) {
+				getline(file, line);
+				cout << line;
+			}
+    }
 		
 		graph& getGraph() {
         }

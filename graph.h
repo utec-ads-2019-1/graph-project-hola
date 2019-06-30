@@ -8,7 +8,9 @@
 #include <map>
 #include "node.h"
 #include "edge.h"
+#include "read.h"
 #include <algorithm>
+#include <limits>
 #include <iostream>
 
 using namespace std;
@@ -32,10 +34,17 @@ public:
     typedef typename NodeSeq::iterator NodeIte;
     typedef typename EdgeSeq::iterator EdgeIte;
 
-    Graph()
-    {
-        // TODO Constructor
+    Graph(int n) {
+			size = n;
+			create_matrix(size);
     }
+
+		Graph(string txt)	{
+			new Read<Tr>(txt);
+		}
+
+		Graph() {
+		}
 
     ~Graph()
     {
@@ -46,6 +55,67 @@ public:
     {
         // TODO
     }
+		
+
+		int getNodePos(N name) {
+			int counter = 0;
+			for (auto ni : nodes) {
+				if ((*ni).getData() == name) {
+					return counter;
+				}
+				counter ++;
+			}
+
+			return -1;
+		}
+
+
+		void create_matrix(int size) {
+			edges_matrix = new int *[size];
+			
+			for (int i = 0; i < size; i++) {
+				edges_matrix[i] = new int [size];
+				for (int j = 0; j < size; j++) {
+					if (i == j) edges_matrix[i][j] = 0;
+					else edges_matrix[i][j] = std::numeric_limits<int>::max();
+				}
+			}		
+		}
+
+
+		void Floyd_Warshall() {
+			int **fw = edges_matrix;
+
+			for (int i = 0; i < size; i++) {
+				for (int j = 0; j < size; j++) {
+					for (int k = 0; k < size; k++) {
+						if (fw[j][i] == std::numeric_limits<int>::max() || fw[i][k] == std::numeric_limits<int>::max())
+						continue;
+
+						else {
+							if ((fw[j][i] + fw[i][k]) < fw[j][k]) 
+								fw[j][k] = fw[j][i] + fw[i][k];
+						}
+					}
+				}
+			}
+			
+			print_matrix(fw);		
+		}
+
+
+		void print_matrix(int** matrix) {
+			std::cout << '\n';
+
+			for (int i = 0; i < size; i++) {
+				for (int j = 0; j < size; j++) {
+					if (matrix[i][j] == std::numeric_limits<int>::max())
+						std::cout << "inf ";
+					else std::cout << matrix[i][j] << ' ';
+				}
+				std::cout << '\n';
+			}
+		}
 
 
     N dsFind(N Nodo){
@@ -66,31 +136,36 @@ public:
 
     bool insertNode(N name, double xAxis = 0, double yAxis = 0) {
       auto tempNode = getNode(name);
-      
+
       if(tempNode) return false;
 
       else {
-        auto newNode = new node(name, xAxis, yAxis);
+        auto newNode = new node(name, xAxis, yAxis, reached);
         nodes.push_back(newNode);
         mapa.insert({name,name});
         return true;
       }
     }
-  
+
 
     bool insertEdge(N orig, N dest, E weight=0, bool direction=0) {
+				
         auto firstNode = getNode(orig);
         auto secondNode = getNode(dest);
-        
+
         if(firstNode == nullptr || secondNode == nullptr) { return false;}
 
         else if(getEdge(orig, dest) != nullptr) return false;
-  
+
         else {
           edge* newEdge = new edge(weight, firstNode, secondNode, direction);
           edgess.push_back(newEdge);
           firstNode->addEdge(newEdge);
           dsJoin(orig, dest);
+
+					if (direction == 0) edges_matrix[getNodePos(dest)][getNodePos(orig)] = weight;
+					edges_matrix[getNodePos(orig)][getNodePos(dest)] = weight;
+					
           return true;
         }
     }
@@ -154,12 +229,22 @@ public:
         return false;
     }
 
-    bool density() {
-      float dens = 0.0f;
+    bool findEdge(N orig, N dest) {
+        if(!getEdge(orig, dest)) return false;
+        else return true;
+    }
 
-       dens = (float)getNumberEdges()/((float)nodes.size()*(float)(nodes.size()-1)) ;
-       
-       return dens >= 0.6f;
+
+    bool findNode(N name) {
+        if(!getNode(name)) return false;
+        else return true;
+    }
+
+
+    bool isDense(float threshold = 0.6) {
+        float dens = 0.0f;
+        dens = (float)getNumberEdges()/((float)nodes.size()*(float)(nodes.size()-1)) ;
+        return dens >= threshold;
     }
 
     int grade(node* currNode) {
@@ -177,28 +262,27 @@ public:
 
     bool connected(){
         bool flag = true;
-
-                for(ni = nodes.begin(); ni != nodes.end(); ni++)
+        for(ni = nodes.begin(); ni != nodes.end(); ni++)
+        {
+            for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
+            {
+                if( (*ei)->getOrigin() == (*ni) || (*ei)->getDest() == (*ni) )
                 {
-                    for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
-                    {
-                        if( (*ei)->getOrigin() == (*ni) || (*ei)->getDest() == (*ni) )
-                        {
-                            flag = true;
-                            break;
-                        }
-                        else
-                        {
-                            flag = false;
-                        }
-                    }
-                    if(!flag)
-                        break;
+                    flag = true;
+                    break;
                 }
-                return flag;
+                else
+                {
+                    flag = false;
+                }
+            }
+            if(!flag)
+                break;
+        }
+        return flag;
     }
-    
-    
+
+
     bool bipartite(){
         map<char,char> color;
         queue<node*> q;
@@ -224,12 +308,12 @@ public:
                     }
                     color[adj[i]] = 'R';
                     q.push(getNode(adj[i]));
-                }                
+                }
             }
         q.pop();
         }
         return true;
-    }   
+    }
 
 
     Graph* MST_Prim() {
@@ -243,7 +327,7 @@ public:
       else {
         for(auto ni : nodes) {
           if (!ni->getMinEdge()) ni++;
-         
+
           else {
             auto o = ni->getMinEdge()->getOrigin();
             auto d = ni->getMinEdge()->getDest();
@@ -276,7 +360,7 @@ public:
                 newGraph->insertEdge(o,d,ei->getData(), ei->getDir());
         }
         return newGraph;
-    }    
+    }
 
 
     Graph* BFS(N orig) {
@@ -291,12 +375,11 @@ public:
 
       auto currentNode = getNode(orig);
       auto prevNode = currentNode;
-
       if(currentNode == NULL) return NULL;
-       
+
       else {
         container.push(currentNode);
-        
+
         while(container.size()>0) {
         //prevNode = currentNode;
         currentNode = container.front();
@@ -343,17 +426,13 @@ public:
 
     Graph* DFS(N orig){
         auto newGraph = new Graph;
+        stack<node *> container;
 
         for (ni = this->nodes.begin(); ni != this->nodes.end(); ni++)
         {
             newGraph->insertNode((*ni)->getData(), (*ni)->getX(), (*ni)->getY());
             (*ni)->setReached(0);
         }
-
-
-        bool nodeVisited, destNodeVisited;
-
-        stack<node *> container;
 
         auto currentNode = getNode(orig);
 
@@ -364,52 +443,33 @@ public:
             container.push(currentNode);
             while(container.size()>0)
             {
+                bool flag = 0;
                 currentNode = container.top();
-                container.pop();
 
-                if(!currentNode->getReached())
-                {
+                if(!currentNode->getReached()) {
                     currentNode->setReached(1);
-
-                    for (ei = edgess.begin() ;  ei != edgess.end(); ei++)
+                }
+                for(auto ei : currentNode->getEdgeVector())
+                {
+                    if(!ei->getDest()->getReached())
                     {
-                        if (!(*ei)->getDir())
-                        {
-                            if( (*ei)->getOrigin() == currentNode && (!(*ei)->getDest()->getReached()))
-                            {
-                                container.push((*ei)->getDest());
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            if( (*ei)->getDest() == currentNode && (!(*ei)->getOrigin()->getReached()))
-                            {
-                                container.push((*ei)->getOrigin());
-                                break;
-                            }
-                        }
+                        container.push(ei->getDest());
+                        flag = 1;
+                        break;
                     }
-
-                    if(!container.empty())
+                }
+                if(!flag)
+                {
+                    container.pop();
+                }
+                else
+                {
+                    if(currentNode != container.top())
                     {
-                        if(currentNode != container.top())
-                        {
-                            if (!(*ei)->getDir())
-                            {
-                                auto tempEdge = getEdge(currentNode->getData(),container.top()->getData());
-                                newGraph->insertEdge(tempEdge->getOrigin()->getData(), tempEdge->getDest()->getData(), tempEdge->getData());
-                            }
-                            else
-                            {
-                                auto tempEdge = getEdgeDir(currentNode->getData(),container.top()->getData());
-                                newGraph->insertEdge(tempEdge->getOrigin()->getData(), tempEdge->getDest()->getData(), tempEdge->getData());
-                            }
-
-                        }
-
+                        auto tempEdge = getEdge(currentNode->getData(),container.top()->getData());
+                        if(tempEdge != NULL)
+                            newGraph->insertEdge(tempEdge->getOrigin()->getData(), tempEdge->getDest()->getData(), tempEdge->getData());
                     }
-
                 }
             }
             return newGraph;
@@ -420,21 +480,9 @@ public:
     bool StronglyConnected()
     {
         auto tempGraph = DFS('B');
+        auto localSCC = transpose()->DFS('B');
 
-        stack<node *> container = stackSCC(tempGraph);
-
-        transpose();
-
-        auto topStack = container.top();
-        container.pop();
-
-        auto localSCC = DFS(topStack->getData());
-
-        if(localSCC->getNumberEdges() == this->getNumberEdges())
-            return true;
-
-        return false;
-
+        return(localSCC->getNumberEdges() == this->getNumberEdges());
     }
 
     //////////////////////////////////////////////////////////////////////////////
@@ -445,13 +493,17 @@ public:
 
     }
 
+    void print2(){
+        for(auto ni : nodes)
+        {
+            printf("\nNodo %c: ", ni->getData());
+            for(auto ei : ni->getEdgeVector())
+            {
+                printf("[%2d -> %c] ", ei->getData(), ei->getDest()->getData());
+            }
+        }
+    }
 
-private:
-    NodeSeq nodes;
-    EdgeSeq edgess;
-    NodeIte ni;
-    EdgeIte ei;
-    map<N,N> mapa;
 
     node *getNode(N name) {
         auto *tmp = new node(name);
@@ -513,38 +565,32 @@ private:
         }
     }
 
-    void transpose()
+    Graph* transpose()
     {
-        for (ei = edgess.begin() ;  ei != edgess.end(); ++ei)
-            (*ei)->setDir(1);
-    }
+        auto newGraph = new Graph;
 
-
-    stack<node*> stackSCC(Graph* graphDFS)
-    {
-        stack<node *> container;
-
-        for (ni = graphDFS->nodes.begin(); ni != graphDFS->nodes.end(); ni++)
-            (*ni)->setReached(0);
-
-        for (ei = graphDFS->edgess.begin() ;  ei != graphDFS->edgess.end(); ei++)
+        for (auto ni : nodes)
         {
-            if( (!(*ei)->getOrigin()->getReached()))
-            {
-                container.push((*ei)->getOrigin());
-                (*ei)->getOrigin()->setReached(1);
-            }
-
-            if (!(*ei)->getDest()->getReached())
-            {
-                container.push((*ei)->getDest());
-                (*ei)->getDest()->setReached(1);
-            }
-
+            newGraph->insertNode(ni->getData(), ni->getX(), ni->getY());
+            ni->setReached(0);
+        }
+        for (auto ei : edgess)
+        {
+            newGraph->insertEdge(ei->getDest()->getData(), ei->getOrigin()->getData(), ei->getData());
         }
 
-        return container;
+        return newGraph;
     }
+
+
+private:
+    NodeSeq nodes;
+    EdgeSeq edgess;
+    NodeIte ni;
+    EdgeIte ei;
+    map<N,N> mapa;
+		int **edges_matrix;
+		int size;
 
 };
 

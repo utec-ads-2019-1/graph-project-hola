@@ -33,7 +33,6 @@ int main(int argc, char *argv[]) {
 		{
 			glClear(GL_COLOR_BUFFER_BIT);
 
-
 	graph graph1;
 
 	graph1.insertNode('A',9,2);
