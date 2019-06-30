@@ -41,12 +41,11 @@ graph1.insertEdge('D', 'B', 3, 1);
     bfs1->print();
 
     cout << "\n\nDFS: \n" ;
-    auto dfs1 = graph1.DFS('B');
+    auto dfs1 = graph1.DFS('A');
     dfs1->print();
 
-    bool a = graph1.StronglyConnected();
-    cout << a;
-    
+    printf("\n\nStrongly Connected: %d", graph1.StronglyConnected());
+/*
     std::cout<<"\n\nKRUSKAL"<<"\n";
 
     graph* kruskal = graph1.MST_Kruskal();
@@ -56,7 +55,7 @@ graph1.insertEdge('D', 'B', 3, 1);
     std::cout<<"\n\nPPRIM\n";
     graph* prim = graph1.MST_Prim();
     prim->print();
-   
+  */
     return EXIT_SUCCESS;
     
     // std::cout<<"\n\nKRUSKAL"<<"\n";
