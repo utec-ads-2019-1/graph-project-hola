@@ -109,6 +109,8 @@ int main(int argc, char *argv[]) {
 
 	auto star = graph2.A_star(0, 4);
 
+	graph1.BellmanFord(2);
+
 
 
     return EXIT_SUCCESS;
