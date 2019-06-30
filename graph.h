@@ -8,6 +8,7 @@
 #include <map>
 #include "node.h"
 #include "edge.h"
+#include "read.h"
 #include <algorithm>
 #include <limits>
 #include <iostream>
@@ -37,6 +38,10 @@ public:
 			size = n;
 			create_matrix(size);
     }
+
+		Graph(string txt)	{
+			new Read<Tr>(txt);
+		}
 
 		Graph() {
 		}
