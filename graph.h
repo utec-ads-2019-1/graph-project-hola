@@ -9,6 +9,7 @@
 #include "node.h"
 #include "edge.h"
 #include <algorithm>
+#include <limits>
 #include <iostream>
 
 using namespace std;
@@ -32,10 +33,13 @@ public:
     typedef typename NodeSeq::iterator NodeIte;
     typedef typename EdgeSeq::iterator EdgeIte;
 
-    Graph()
-    {
-        // TODO Constructor
+    Graph(int n) {
+			size = n;
+			create_matrix(size);
     }
+
+		Graph() {
+		}
 
     ~Graph()
     {
@@ -46,6 +50,67 @@ public:
     {
         // TODO
     }
+		
+
+		int getNodePos(N name) {
+			int counter = 0;
+			for (auto ni : nodes) {
+				if ((*ni).getData() == name) {
+					return counter;
+				}
+				counter ++;
+			}
+
+			return -1;
+		}
+
+
+		void create_matrix(int size) {
+			edges_matrix = new int *[size];
+			
+			for (int i = 0; i < size; i++) {
+				edges_matrix[i] = new int [size];
+				for (int j = 0; j < size; j++) {
+					if (i == j) edges_matrix[i][j] = 0;
+					else edges_matrix[i][j] = std::numeric_limits<int>::max();
+				}
+			}		
+		}
+
+
+		void Floyd_Warshall() {
+			int **fw = edges_matrix;
+
+			for (int i = 0; i < size; i++) {
+				for (int j = 0; j < size; j++) {
+					for (int k = 0; k < size; k++) {
+						if (fw[j][i] == std::numeric_limits<int>::max() || fw[i][k] == std::numeric_limits<int>::max())
+						continue;
+
+						else {
+							if ((fw[j][i] + fw[i][k]) < fw[j][k]) 
+								fw[j][k] = fw[j][i] + fw[i][k];
+						}
+					}
+				}
+			}
+			
+			print_matrix(fw);		
+		}
+
+
+		void print_matrix(int** matrix) {
+			std::cout << '\n';
+
+			for (int i = 0; i < size; i++) {
+				for (int j = 0; j < size; j++) {
+					if (matrix[i][j] == std::numeric_limits<int>::max())
+						std::cout << "inf ";
+					else std::cout << matrix[i][j] << ' ';
+				}
+				std::cout << '\n';
+			}
+		}
 
 
     N dsFind(N Nodo){
@@ -79,6 +144,7 @@ public:
 
 
     bool insertEdge(N orig, N dest, E weight=0, bool direction=0) {
+				
         auto firstNode = getNode(orig);
         auto secondNode = getNode(dest);
 
@@ -91,6 +157,10 @@ public:
           edgess.push_back(newEdge);
           firstNode->addEdge(newEdge);
           dsJoin(orig, dest);
+
+					if (direction == 0) edges_matrix[getNodePos(dest)][getNodePos(orig)] = weight;
+					edges_matrix[getNodePos(orig)][getNodePos(dest)] = weight;
+					
           return true;
         }
     }
@@ -437,13 +507,6 @@ public:
     }
 
 
-private:
-    NodeSeq nodes;
-    EdgeSeq edgess;
-    NodeIte ni;
-    EdgeIte ei;
-    map<N,N> mapa;
-
     node *getNode(N name) {
         auto *tmp = new node(name);
 
@@ -455,6 +518,7 @@ private:
 
         else return nullptr;
     }
+
 
 
     edge *getEdge(N orig, N dest) {
@@ -520,6 +584,14 @@ private:
     }
 
 
+private:
+    NodeSeq nodes;
+    EdgeSeq edgess;
+    NodeIte ni;
+    EdgeIte ei;
+    map<N,N> mapa;
+		int **edges_matrix;
+		int size;
 
 };
 
