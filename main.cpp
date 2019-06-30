@@ -11,6 +11,7 @@ int main(int argc, char *argv[]) {
     cout << "Graph test" << endl;
     cout << "---------------" << endl;
 
+
     graph graph1(4)
 
 graph1.insertNode('A');
