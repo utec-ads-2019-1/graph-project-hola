@@ -1,6 +1,7 @@
 //#include <GL/glut.h>
 #include <iostream>
 #include "graph.h"
+#include "read.h"
 
 using namespace std;
 
@@ -11,7 +12,7 @@ int main(int argc, char *argv[]) {
     cout << "---------------" << endl;
 
 
-    graph graph1(4);
+    graph graph1(4)
 
 graph1.insertNode('A');
 graph1.insertNode('B');
