@@ -6,6 +6,7 @@
 
 #include "node.h"
 #include "edge.h"
+#include "draw.h"
 
 using namespace std;
 
@@ -29,7 +30,6 @@ class Graph {
         typedef typename EdgeSeq::iterator EdgeIte;
 
         int nodesize = nodes.size();
-        int edgesize = edgess.size();
 
 
     bool insertNode(N name, double xAxis = 0, double yAxis = 0) {
@@ -40,6 +40,7 @@ class Graph {
       else {
         auto newNode = new node(name, xAxis, yAxis);
         nodes.push_back(newNode);
+        Draw::drawCircle(name,xAxis,yAxis);
         return true;
       }
     }
@@ -54,8 +55,15 @@ class Graph {
   
         else {
           edge* newEdge = new edge(weight, firstNode, secondNode, direction);
-          edgess.push_back(newEdge);
           firstNode->addEdge(newEdge);
+          originX = firstNode->getX;
+          originY = firstNode->getY;
+          destX = secondNode->getX;
+          destY = secondNode->getY;
+          if(direction == 1){
+            Draw::drawArrow(weight,originX,originY,destX,destY);
+          }
+          Draw::drawLine(weight,originX,originY,destX,destY);
           return true;
         }
     }
@@ -107,7 +115,10 @@ class Graph {
         }
     }
 
-    Graph* 
+    Graph* Dijkstra(N node){
+        matrix[nodesize][nodesize];
+        unordered_map<char,bool> visited;
+    }
 
     private:
         NodeSeq nodes;

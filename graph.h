@@ -64,13 +64,13 @@ public:
     }
 
 
-    bool insertNode(N name, double xAxis = 0, double yAxis = 0, bool reached = 0) {
+    bool insertNode(N name, double xAxis = 0, double yAxis = 0) {
       auto tempNode = getNode(name);
       
       if(tempNode) return false;
 
       else {
-        auto newNode = new node(name, xAxis, yAxis, reached);;
+        auto newNode = new node(name, xAxis, yAxis);
         nodes.push_back(newNode);
         mapa.insert({name,name});
         return true;
@@ -437,24 +437,11 @@ public:
 
     }
 
-
-
-    void print() {
-        for (auto ei : edgess) {
-
-            if(!ei->getDir())
-                std::cout << ei->getOrigin()->getData() << " [" << ei->getData() << "] -> " << ei->getDest()->getData() << "\n";
-            else
-                std::cout << ei->getDest()->getData() << " [" << ei->getData() << "] -> " << ei->getOrigin()->getData() << "\n";
-
-        }
-    }
-
     //////////////////////////////////////////////////////////////////////////////
     ///////////////////////////////SEGUNDA ENTREGA////////////////////////////////
     //////////////////////////////////////////////////////////////////////////////
 
-    graph* Dijkstra(N a){
+    Graph* Dijkstra(N a){
 
     }
 
