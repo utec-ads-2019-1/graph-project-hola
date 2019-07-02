@@ -944,24 +944,18 @@ public:
     };
 
     
-    Graph* BellmanFord(char a)
+    Graph* BellmanFord(int src)
     {
-        int index;
-        auto newGraph = new Graph(size);
-        for(int i=0;i<size;i++){
-            if(nodes[i]->getData() == a){
-                index = i;
-                break;
-            }
-        }
 
         int V = this->nodes.size();
         int E = this->edgess.size();
         int dist[V];
 
-        for (int i = 0; i < V; i++)
+        for (int i = 0; i < V; i++){
             dist[i] = std::numeric_limits<int>::max();
-        dist[index] = 0;
+            parent[i] = i;
+        }
+        dist[src] = 0;
 
         for (int i = 1; i <= V-1; i++)
         {
@@ -988,6 +982,10 @@ public:
         printf("\nNode\tDistance\n");
         for (int i = 0; i < V; ++i)
             printf("%2d \t\t %2d\n", i, dist[i]);
+
+        for (auto ni : nodes) {
+            newGraph->insertNode(ni->getData(), ni->getX(), ni->getY());
+        }
 
         return newGraph;
     }
