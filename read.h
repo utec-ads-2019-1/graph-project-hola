@@ -15,6 +15,8 @@ template <typename G>
 class Read {
 	typedef typename G::N N;
 	typedef typename G::E E;
+	typedef typename G::self graph;
+	typedef typename G::R R;
 	graph graph1;
 		
 	public:
@@ -25,14 +27,32 @@ class Read {
 
 			if (!file) cout << "error\n";
 
-			while(!file.eof()) {
-				getline(file, line);
-				cout << line;
+			int num_nodes, num_edges, weight;
+			double x, y;
+			bool directed;
+			char node, edge_init, edge_end;
+			
+			file >> num_nodes >> directed;
+			graph1.setDirected(directed);
+			graph1.setSize(num_nodes);
+
+			for (int i = 0; i < num_nodes; i++) {
+				file >> node >> x >> y;
+				graph1.insertNode(node, x, y);
 			}
+
+			file >> num_edges;
+
+			for (int j = 0; j < num_edges; j++) {
+				file >> edge_init >> edge_end >> weight;
+				graph1.insertEdge(edge_init, edge_end, weight);
+			}
+
     }
 		
 		graph& getGraph() {
-        }
+			return graph1;
+    }
 };
 
 #endif

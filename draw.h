@@ -19,6 +19,25 @@ using namespace std;
 class Draw {
 
 public:
+/*
+	static void drawGraph(graph* graph) {
+		for (auto ei : graph->edgess) {
+			node* origin = ei->getOrigin();
+			node* dest = ei->getDest();
+			float fX = origin->getX();
+			float fY = origin->getY();
+			float sX = dest->getX();
+			float sY = dest->getY();
+
+			if(ei->getDir()){
+				drawArrow(ei->getData,fX,fY,sX,sY);
+			}
+			else{
+				drawLine(ei->getData,fX,fY,sX,sY);
+			}
+		}
+	} */
+
 	static string int_string(int n){
     string str;
     while(n){
