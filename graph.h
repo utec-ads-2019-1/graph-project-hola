@@ -19,6 +19,7 @@ class Traits {
 public:
     typedef char N;
     typedef int E;
+		typedef string R;
 };
 
 template <typename Tr>
@@ -27,23 +28,19 @@ public:
     typedef Graph<Tr> self;
     typedef Node<self> node;
     typedef Edge<self> edge;
+		typedef Read<self> read;
     typedef vector<node*> NodeSeq;
     typedef list<edge*> EdgeSeq;
     typedef typename Tr::N N;
     typedef typename Tr::E E;
+		typedef typename Tr::R R;
     typedef typename NodeSeq::iterator NodeIte;
     typedef typename EdgeSeq::iterator EdgeIte;
 
-    Graph(int n) {
-			size = n;
-			create_matrix(size);
-    }
-
-		Graph(string txt)	{
-			new Read<Tr>(txt);
-		}
-
 		Graph() {
+			size = 0;
+			create_matrix(0);
+			direction = 0;
 		}
 
     ~Graph()
@@ -55,6 +52,10 @@ public:
     {
         // TODO
     }
+
+		void setSize(int n) { size = n; create_matrix(n); }
+		
+		void setDirected(bool n) { direction = n; }
 		
 
 		int getNodePos(N name) {
@@ -100,12 +101,15 @@ public:
 				}
 			}
 			
-			print_matrix(fw);		
+			print_matrix(fw, "Floyd Warshall");		
 		}
 
 
-		void print_matrix(int** matrix) {
-			std::cout << '\n';
+		void print_matrix(int** matrix, string name) {
+			std::cout << "\n";
+			std::cout << "\n-----------------\n" <<
+									 name  <<
+									 "\n-----------------\n";
 
 			for (int i = 0; i < size; i++) {
 				for (int j = 0; j < size; j++) {
@@ -140,7 +144,7 @@ public:
       if(tempNode) return false;
 
       else {
-        auto newNode = new node(name, xAxis, yAxis, reached);
+        auto newNode = new node(name, xAxis, yAxis);
         nodes.push_back(newNode);
         mapa.insert({name,name});
         return true;
@@ -148,7 +152,7 @@ public:
     }
 
 
-    bool insertEdge(N orig, N dest, E weight=0, bool direction=0) {
+    bool insertEdge(N orig, N dest, E weight=0) {
 				
         auto firstNode = getNode(orig);
         auto secondNode = getNode(dest);
@@ -493,7 +497,7 @@ public:
 
     }
 
-    void print2(){
+    void print(){
         for(auto ni : nodes)
         {
             printf("\nNodo %c: ", ni->getData());
@@ -591,6 +595,7 @@ private:
     map<N,N> mapa;
 		int **edges_matrix;
 		int size;
+		bool direction;
 
 };
 
