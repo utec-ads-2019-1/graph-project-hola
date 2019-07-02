@@ -28,6 +28,7 @@ class Read {
 			if (!file) cout << "error\n";
 
 			int num_nodes, num_edges, weight;
+			double x, y;
 			bool directed;
 			char node, edge_init, edge_end;
 			
@@ -36,8 +37,8 @@ class Read {
 			graph1.setSize(num_nodes);
 
 			for (int i = 0; i < num_nodes; i++) {
-				file >> node;
-				graph1.insertNode(node);
+				file >> node >> x >> y;
+				graph1.insertNode(node, x, y);
 			}
 
 			file >> num_edges;
