@@ -684,8 +684,16 @@ public:
     };
 
     
-    Graph* BellmanFord(int src)
+    Graph* BellmanFord(char a)
     {
+        int index;
+        auto newGraph = new Graph(size);
+        for(int i=0;i<size;i++){
+            if(nodes[i]->getData() == a){
+                index = i;
+                break;
+            }
+        }
         auto newGraph = new Graph;
 
         int V = this->nodes.size();
@@ -694,7 +702,7 @@ public:
 
         for (int i = 0; i < V; i++)
             dist[i] = std::numeric_limits<int>::max();
-        dist[src] = 0;
+        dist[index] = 0;
 
         for (int i = 1; i <= V-1; i++)
         {
