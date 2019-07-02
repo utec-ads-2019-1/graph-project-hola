@@ -44,6 +44,7 @@ public:
     /////////////////////////////////////////////////////////////////
     ///////////////////////OPENGL////////////////////////////////////
     void drawGraph() {
+        vector<edge*> drawn;
         for (auto ei : edgess) {
             node* origin = ei->getOrigin();
             node* dest = ei->getDest();
@@ -52,13 +53,24 @@ public:
             float sX = dest->getX();
             float sY = dest->getY();
 
-            if(ei->getDir()){
-                drawArrow(ei->getData(),fX,fY,sX,sY);
-            }
-            else{
-                drawLine(ei->getData(),fX,fY,sX,sY);
+            if(std::count(drawn.begin(),drawn.end(),ei) == 0){
+                if(ei->getDir()){
+                    if(getEdge(dest->getData(),origin->getData()) != nullptr && (getEdge(dest->getData(),origin->getData()))->getDir()){
+    				    //drawTwoLines
+
+                        drawn.push_back(getEdge(dest->getData(),origin->getData()));
+                    }
+    				else{
+                        drawArrow(ei->getData(),fX,fY,sX,sY);
+                    }
+                }
+                else{
+                    drawLine(ei->getData(),fX,fY,sX,sY);
+                }
+                drawn.push_back(ei);
             }
         }
+
         for (auto ni : nodes){
             N name = ni->getData();
             float nX = ni->getX();
@@ -68,14 +80,23 @@ public:
     }
 
     string int_string(int n){
-    string str;
-    while(n){
-        str.push_back(n%10 + 48);
-        n = n/10;
+        string str;
+        while(n){
+            str.push_back(n%10 + 48);
+            n = n/10;
+        }
+        reverse(str.begin(), str.end());
+        return str;
     }
-    reverse(str.begin(), str.end());
-    return str;
-}
+	void write(double x, double y, int weight) {
+		GLvoid *font_style = GLUT_BITMAP_HELVETICA_18;
+		string str = int_string(weight);
+		glRasterPos2f(x, y);
+		for (size_t i = 0; i < str.size(); i++) {
+			glutBitmapCharacter(font_style, str[i]);
+		}
+	}
+
     void drawArrow(int weight,double x1, double y1, double x2, double y2) {
         glEnable(GL_LINE_SMOOTH);
         glLineWidth(4.0);
@@ -87,14 +108,13 @@ public:
         y2 *= NORM;
 
         glBegin(GL_LINES);
-        glColor4f(1.0, 0.0, 0.0, 1.0);
+        glColor4f(255.0, 255.0, 255.0, 1.0);
         glVertex2f(x1, y1);
         glVertex2f(x2, y2);
         glEnd();
 
         double vx = x1 - x2;                        //variacion
         double vy = y1 - y2;                        //variacion
-        double m = vy / vx;                         //Slope
         double d = sqrt(vx*vx + vy * vy);           //Modulo
         double s = 1.0f / d;                        //Vector unitario
         double r = (d - RADIUS) / d;                //Ratio
@@ -107,13 +127,10 @@ public:
         vx *= NORM;
         vy *= NORM;
 
-        double angle = atan(m) * 180 / M_PI;
         double size = 0.5;
-        double newx = x2;
-        double newy = y2;
 
         glBegin(GL_LINES);
-        glColor4f(0.0, 1.0, 0.0, 1.0);
+        glColor4f(255.0, 255.0, 255.0, 1.0);
         glVertex2f(newX, newY);
         glVertex2f(newX + size * (vx + vy), newY + size * (vy - vx));
         glEnd();
@@ -121,15 +138,20 @@ public:
         glVertex2f(newX, newY);
         glVertex2f(newX + size * (vx - vy), newY + size * (vy + vx));
         glEnd();
-        glColor3f(0.0, 0.0, 1.0);
-        GLvoid *font_style = GLUT_BITMAP_HELVETICA_18;
         float yW = (y1 + y2) / 2;
         float xW = (x1 + x2) / 2;
-        string str = int_string(weight);
-        glRasterPos2f(xW, yW);
-        for (int i = 0; i < str.size(); i++) {
-            glutBitmapCharacter(font_style, str[i]);
-        }
+		double var = 0.003;
+		glColor3f(0.0, 0.0, 1.0);
+		write(xW + var, yW, weight);
+		write(xW, yW + var, weight);
+		write(xW - var, yW, weight);
+		write(xW, yW - var, weight);
+		write(xW + var / 2, yW, weight);
+		write(xW - var / 2, yW, weight);
+		write(xW, yW + var / 2, weight);
+		write(xW, yW - var / 2, weight);
+		glColor3f(255.0, 255.0, 255.0);
+		write(xW, yW, weight);
     }
     void drawLine(int weight, double x1, double y1, double x2, double y2) {
         glEnable(GL_LINE_SMOOTH);
@@ -139,10 +161,24 @@ public:
         x2 *= NORM;
         y2 *= NORM;
         glBegin(GL_LINES);
-        glColor4f(1.0, 0.0, 0.0, 1.0);
+        glColor4f(255.0, 255.0, 255.0, 1.0);
         glVertex2f(x1, y1);
         glVertex2f(x2, y2);
         glEnd();
+		float yW = (y1 + y2) / 2;
+		float xW = (x1 + x2) / 2;
+		double var = 0.002;
+		glColor3f(0.0, 0.0, 1.0);
+		write(xW + var, yW, weight);
+		write(xW, yW + var, weight);
+		write(xW - var, yW, weight);
+		write(xW, yW - var, weight);
+		write(xW + var / 2, yW, weight);
+		write(xW - var / 2, yW, weight);
+		write(xW, yW + var / 2, weight);
+		write(xW, yW - var / 2, weight);
+		glColor3f(255.0, 255.0, 255.0);
+		write(xW, yW, weight);
     }
     void drawCircle(char C, double x, double y) {
         double y0 = y - RADIUS / 2;
@@ -157,7 +193,7 @@ public:
         glEnable(GL_LINE_SMOOTH);
         glLineWidth(1.0);
         glBegin(GL_LINES);
-        glColor4f(1.0, 0.0, 0.0, 1.0);
+        glColor4f(0.0, 0.0, 255.0, 1.0);
         for (i = 0; i <= triangleAmount; i++)
         {
             glVertex2f(x, y);
@@ -166,8 +202,18 @@ public:
 
             glVertex2f(norm_x, norm_y);
         }
+		glBegin(GL_LINES);
+		glColor4f(255.0, 255.0, 255.0, 1.0);
+		for (i = 0; i <= triangleAmount; i++)
+		{
+			glVertex2f(x, y);
+			float norm_x = x + ((RADIUS-0.004) * cos(i * twicePi / triangleAmount));
+			float norm_y = y + ((RADIUS - 0.004) * sin(i * twicePi / triangleAmount));
+
+			glVertex2f(norm_x, norm_y);
+		}
         glEnd();
-        glColor3f(0.0, 0.0, 1.0);
+        glColor3f(0.0, 0.0, 0.0);
         GLvoid *font_style = GLUT_BITMAP_HELVETICA_18;
         x0 = x0 - 0.011;
         y0 = y0 - 0.01;
@@ -635,8 +681,85 @@ public:
     //////////////////////////////////////////////////////////////////////////////
 
     Graph* Dijkstra(N a){
+		int index;
+        auto newGraph = new Graph(size);
+        for(int i=0;i<size;i++){
+            if(nodes[i]->getData() == a){
+                index = i;
+				break;
+            }
+        }
+        int* dist = new int[size];
+        bool* set = new bool[size];
+		int* parent = new int[size];
 
+        for(int i = 0;i<size;i++){
+            dist[i] = std::numeric_limits<int>::max();
+			set[i] = false;
+			parent[i] = i;
+        }
+        dist[index] = 0;
+
+        for(int i = 0; i<size-1;i++){
+            int u = minDist(dist,set);
+            set[u] = true;
+            for(int j = 0;j<size;j++){
+                if(!set[j] //el nodo no esta en set 
+					&&
+					getEdge(nodes[u]->getData(),nodes[j]->getData()) // existe un edge entre u y j
+					&&
+					dist[u] != std::numeric_limits<int>::max() //la distancia no es infinito
+					&&
+					dist[u] + (getEdge(nodes[u]->getData(),nodes[j]->getData()))->getData() < dist[j]) //la distancia es menor
+				{
+					dist[j] = dist[u] + (getEdge(nodes[u]->getData(),nodes[j]->getData()))->getData();
+					parent[j] = u;
+                }
+            }
+        }
+		cout << "||||||||DIJKSTRA||||||||\n\n";
+		cout << "Vertex\tDistance from src\tParent node\n";
+		for (int i = 0; i < size; i++) {
+			cout << nodes[i]->getData() << "\t\t";
+			if (dist[i] == std::numeric_limits<int>::max()) {
+				cout << "INF\t\t";
+			}
+			else {
+				cout << dist[i] << "\t\t";
+			}
+			cout << nodes[parent[i]]->getData() << "\n";
+		}
+
+		for (auto ni : nodes) {
+			newGraph->insertNode(ni->getData(), ni->getX(), ni->getY());
+		}
+		for (int i = 0; i < size; i++) {
+			auto edge = getEdge(nodes[parent[i]]->getData(), nodes[i]->getData());
+			if (edge != nullptr) {
+				newGraph->insertEdge(nodes[parent[i]]->getData(), nodes[i]->getData(), edge->getData(), edge->getDir());
+			}
+		//getEdge(nodes[parent[i]]->getData(), nodes[i]->getData())->getData()
+		//nodes[parent[i]]->getData()
+		//nodes[i]->getData()
+		}
+		cout << "\n||||||||DIJKSTRA||||||||\n\n";
+		return newGraph;
     }
+
+    int minDist(int dist[], bool set[]){
+        int size = nodes.size();
+        int min = std::numeric_limits<int>::max();
+        int min_index;
+        for(int i = 0;i<size;i++){
+            if(set[i]==false && dist[i]<=min){
+                min = dist[i];
+                min_index = i;
+            }
+        }
+		return min_index;
+    }
+
+
 
     void print2(){
         for(auto ni : nodes)
@@ -677,24 +800,6 @@ public:
 
         else return nullptr;
     }
-
-    edge* getEdgeDir(N orig, N dest) {
-
-        edge* tmp = new edge(orig, dest);
-
-        if(edgess.size() > 0) {
-
-            ei = std::find_if(edgess.begin(), edgess.end(), [&tmp](edge* x) {
-                return (x->getDest()->getData() == tmp->getOrigin()->getData()) && (x->getOrigin()->getData() == tmp->getDest()->getData());
-            });
-            if (ei != edgess.end()) return *ei;
-
-            else return nullptr;
-        }
-
-        else return nullptr;
-    }
-
 
     int getNumberEdges() {
         return edgess.size();
