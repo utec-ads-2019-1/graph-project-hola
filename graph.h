@@ -943,6 +943,55 @@ public:
         return sqrt((a->getX() - b->getX())*(a->getX() - b->getX()) + (a->getY() - b->getY())*(a->getY() - b->getY()));
     };
 
+    
+    Graph* BellmanFord(char a)
+    {
+        int index;
+        auto newGraph = new Graph(size);
+        for(int i=0;i<size;i++){
+            if(nodes[i]->getData() == a){
+                index = i;
+                break;
+            }
+        }
+
+        int V = this->nodes.size();
+        int E = this->edgess.size();
+        int dist[V];
+
+        for (int i = 0; i < V; i++)
+            dist[i] = std::numeric_limits<int>::max();
+        dist[index] = 0;
+
+        for (int i = 1; i <= V-1; i++)
+        {
+            for(auto ei: edgess)
+            {
+                int nodeOrig = ei->getOrigin()->getData();
+                int nodeDest = ei->getDest()->getData();
+                int weight = ei->getData();
+                if(dist[nodeOrig] != std::numeric_limits<int>::max() && dist[nodeOrig] + weight < dist[nodeDest])
+                    dist[nodeDest] = dist[nodeOrig] + weight;
+            }
+        }
+
+        for(auto ei: edgess)
+        {
+            int nodeOrig = ei->getOrigin()->getData();
+            int nodeDest = ei->getDest()->getData();
+            int weight = ei->getData();
+            if(dist[nodeOrig] != std::numeric_limits<int>::max() && dist[nodeOrig] + weight < dist[nodeDest])
+                printf("Graph contains negative weight cycle");
+        }
+
+
+        printf("\nNode\tDistance\n");
+        for (int i = 0; i < V; ++i)
+            printf("%2d \t\t %2d\n", i, dist[i]);
+
+        return newGraph;
+    }
+
 
 private:
 	NodeSeq nodes;
