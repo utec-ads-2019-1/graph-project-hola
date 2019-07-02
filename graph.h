@@ -944,18 +944,27 @@ public:
     };
 
     
-    Graph* BellmanFord(int src)
+    Graph* BellmanFord(N src)
     {
+        auto newGraph = new Graph;
+
+        for (auto ni : nodes)
+        {
+            newGraph->insertNode(ni->getData(), ni->getX(), ni->getY());
+            ni->setReached(0);
+        }
+
 
         int V = this->nodes.size();
         int E = this->edgess.size();
         int dist[V];
+        int parents[V];
 
-        for (int i = 0; i < V; i++){
+        for (int i = 0; i < V; i++)
             dist[i] = std::numeric_limits<int>::max();
-            parent[i] = i;
-        }
+
         dist[src] = 0;
+        parents[src] = -1;
 
         for (int i = 1; i <= V-1; i++)
         {
@@ -965,7 +974,11 @@ public:
                 int nodeDest = ei->getDest()->getData();
                 int weight = ei->getData();
                 if(dist[nodeOrig] != std::numeric_limits<int>::max() && dist[nodeOrig] + weight < dist[nodeDest])
+                {
                     dist[nodeDest] = dist[nodeOrig] + weight;
+                    parents[nodeDest] = nodeOrig;
+                }
+
             }
         }
 
@@ -979,12 +992,16 @@ public:
         }
 
 
-        printf("\nNode\tDistance\n");
-        for (int i = 0; i < V; ++i)
-            printf("%2d \t\t %2d\n", i, dist[i]);
+        printf("\nNode\tDistance\tParent\n");
 
-        for (auto ni : nodes) {
-            newGraph->insertNode(ni->getData(), ni->getX(), ni->getY());
+        for (int i = 0; i < V; ++i)
+        {
+            printf("%2d \t\t %2d \t\t%d\n", i, dist[i], parents[i]);
+            auto temp_init = parents[i];
+            auto temp_end = i;
+            auto temp_edge = getEdge(temp_init, temp_end);
+            if(temp_edge != nullptr)
+                newGraph->insertEdge(temp_init ,temp_end, temp_edge->getData(), temp_edge->getDir());
         }
 
         return newGraph;
