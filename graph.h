@@ -9,12 +9,13 @@
 #include <math.h>
 #include "node.h"
 #include "edge.h"
-//#include "read.h"
+#include "read.h"
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <algorithm>
 #include <limits>
 #include <iostream>
+#include <string>
 
 #define WINDOW 950
 #define REAL_RADIUS 1
@@ -36,7 +37,7 @@ public:
     typedef Graph<Tr> self;
     typedef Node<self> node;
     typedef Edge<self> edge;
-		typedef Read<self> read;
+	typedef Read<self> read;
     typedef vector<node*> NodeSeq;
     typedef list<edge*> EdgeSeq;
     typedef typename Tr::N N;
@@ -306,11 +307,9 @@ public:
 		}
 
 
-		void print_matrix(int** matrix, string name) {
+		void print_matrix(int** matrix, std::string name) {
 			std::cout << "\n";
-			std::cout << "\n-----------------\n" <<
-									 name  <<
-									 "\n-----------------\n";
+			std::cout << "\n-----------------\n" << name  << "\n-----------------\n";
 
 			for (int i = 0; i < size; i++) {
 				for (int j = 0; j < size; j++) {
@@ -353,7 +352,7 @@ public:
     }
 
 
-    bool insertEdge(N orig, N dest, E weight=0) {
+    bool insertEdge(N orig, N dest, E weight) {
 				
         auto firstNode = getNode(orig);
         auto secondNode = getNode(dest);
@@ -750,7 +749,7 @@ public:
 		for (int i = 0; i < size; i++) {
 			auto edge = getEdge(nodes[parent[i]]->getData(), nodes[i]->getData());
 			if (edge != nullptr) {
-				newGraph->insertEdge(nodes[parent[i]]->getData(), nodes[i]->getData(), edge->getData(), edge->getDir());
+				newGraph->insertEdge(nodes[parent[i]]->getData(), nodes[i]->getData(), edge->getData());
 			}
 		//getEdge(nodes[parent[i]]->getData(), nodes[i]->getData())->getData()
 		//nodes[parent[i]]->getData()
@@ -876,6 +875,8 @@ public:
         auto origNode = getNode(orig);
         auto destNode = getNode(dest);
 
+		nodeStart = nullptr;
+		nodeEnd = nullptr;
         nodeStart = &nodeA[orig];
         nodeEnd = &nodeA[dest];
 
@@ -930,7 +931,7 @@ public:
                 auto temp_init = current->parent->content->getData();
                 auto temp_end = current->content->getData();
                 auto temp_edge = getEdge(temp_init, temp_end);
-                newGraph->insertEdge(temp_init ,temp_end, temp_edge->getData(), temp_edge->getDir());
+                newGraph->insertEdge(temp_init ,temp_end, temp_edge->getData());
             }
             current = current->parent;
         }
@@ -957,8 +958,8 @@ public:
 
         int V = this->nodes.size();
         int E = this->edgess.size();
-        int dist[V];
-        int parents[V];
+        int* dist = new int[V];
+        int* parents = new int[V];
 
         for (int i = 0; i < V; i++)
             dist[i] = std::numeric_limits<int>::max();
@@ -1001,12 +1002,20 @@ public:
             auto temp_end = i;
             auto temp_edge = getEdge(temp_init, temp_end);
             if(temp_edge != nullptr)
-                newGraph->insertEdge(temp_init ,temp_end, temp_edge->getData(), temp_edge->getDir());
+                newGraph->insertEdge(temp_init ,temp_end, temp_edge->getData());
         }
 
         return newGraph;
     }
 
+	struct sNode
+	{
+		node* content;
+		float fGlobalGoal;              // Distance to goal so far
+		float fLocalGoal;               // Distance to goal if we took the alternative route
+		vector<sNode*> vecNeighbours;   // Connections to neighbours
+		sNode* parent = nullptr;                  // Node connecting to this node that offers shortest parent
+	};
 
 private:
 	NodeSeq nodes;
@@ -1018,14 +1027,6 @@ private:
 	  int size;
     bool direction;
 
-    struct sNode
-    {
-        node* content;
-        float fGlobalGoal;              // Distance to goal so far
-        float fLocalGoal;               // Distance to goal if we took the alternative route
-        vector<sNode*> vecNeighbours;   // Connections to neighbours
-        sNode* parent;                  // Node connecting to this node that offers shortest parent
-    };
 
     sNode *nodeA = nullptr;
     sNode *nodeStart = nullptr;

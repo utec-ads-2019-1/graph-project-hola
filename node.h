@@ -19,7 +19,7 @@ public:
     EdgeIte nie;
 
     Node(){}
-    Node(N value){data = value; x = y = 0;}
+	Node(N value) { data = value; x = y = 0; reached = 0; }
     Node(N value, double xAxis, double yAxis){data = value; x= xAxis; y = yAxis;}
 
     N getData() {return data;}
@@ -73,7 +73,7 @@ private:
     N data;
     double x;
     double y;
-    bool reached;
+    bool reached=0;
     Seq nodeEdges;
 };
 
